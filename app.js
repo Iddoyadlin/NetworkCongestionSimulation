@@ -146,6 +146,7 @@ function restart() {
   // add new links
   path = path.enter().append('svg:path')
     .attr('class', 'link')
+    .attr("id",function(d,i) { return "linkId_" + i; })
     .classed('selected', (d) => d === selectedLink)
     .style('marker-start', (d) => d.left ? 'url(#start-arrow)' : '')
     .style('marker-end', (d) => d.right ? 'url(#end-arrow)' : '')
@@ -159,6 +160,21 @@ function restart() {
       restart();
     })
     .merge(path);
+
+  var linktext = svg.append("svg:g").selectAll("g.linklabelholder").data(links);
+  linktext.enter().append("g").attr("class", "linklabelholder")
+  .append("text")
+  .attr("class", "linklabel")
+  .style("font-size", "13px")
+  .attr("x", "50")
+  .attr("y", "-20")
+  .attr("text-anchor", "start")
+  .style("fill","#000")
+  .append("textPath")
+  .attr("xlink:href",function(d,i) { return "#linkId_" + i;})
+  .text(function(d) { 
+      return "1"; //Can be dynamic via d object 
+  });
 
   // circle (node) group
   // NB: the function arg is crucial here! nodes are known by id, not by index!
@@ -234,6 +250,14 @@ function restart() {
       const link = links.filter((l) => l.source === source && l.target === target)[0];
       if (link) {
         link[isRight ? 'right' : 'left'] = true;
+        link.append('svg:text')
+        .style("pointer-events", "none")
+            .attrs({
+                'class': 'edgelabel',
+                'id': function (d, i) {return 'edgelabel' + i},
+                'font-size': 10,
+                'fill': '#aaa'
+            });
       } else {
         links.push({ source, target, left: !isRight, right: isRight });
       }

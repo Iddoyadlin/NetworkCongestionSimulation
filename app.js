@@ -16,12 +16,13 @@ const svg = d3.select('#graph')
 const nodes = [
   { id: 0, reflexive: false },
   { id: 1, reflexive: true },
-  { id: 2, reflexive: false }
+  // { id: 2, reflexive: false }
 ];
-let lastNodeId = 2;
+let lastNodeId = 1;
+// let lastNodeId = 2;
 const links = [
-  { source: nodes[0], target: nodes[1], left: false, right: true },
-  { source: nodes[1], target: nodes[2], left: false, right: true }
+   { source: nodes[0], target: nodes[1], left: false, right: true },
+  // { source: nodes[1], target: nodes[2], left: false, right: true }
 ];
 
 // init D3 force layout

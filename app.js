@@ -3,7 +3,7 @@ const width = 960;
 const height = 500;
 const colors = d3.scaleOrdinal(d3.schemeCategory10);
 
-const svg = d3.select('body')
+const svg = d3.select('#graph')
   .append('svg')
   .on('contextmenu', () => { d3.event.preventDefault(); })
   .attr('width', width)

@@ -11,12 +11,10 @@ const svg = d3.select('#graph')
 
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
-//  - reflexive edges are indicated on the node (as a bold black circle).
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
 const nodes = [
-  { id: 0, reflexive: false },
-  { id: 1, reflexive: false },
-  // { id: 2, reflexive: false }
+  { id: 0},
+  { id: 1},
 ];
 let lastNodeId = 1;
 // let lastNodeId = 2;
@@ -180,10 +178,9 @@ function restart() {
   // NB: the function arg is crucial here! nodes are known by id, not by index!
   circle = circle.data(nodes, (d) => d.id);
 
-  // update existing nodes (reflexive & selected visual states)
+  // update existing nodes (selected visual states)
   circle.selectAll('circle')
     .style('fill', (d) => (d === selectedNode) ? d3.rgb(colors(0)).brighter().toString() : colors(0))
-    .classed('reflexive', (d) => d.reflexive);
 
   // remove old nodes
   circle.exit().remove();
@@ -196,7 +193,6 @@ function restart() {
     .attr('r', 12)
     .style('fill', (d) => (d === selectedNode) ? d3.rgb(colors(0)).brighter().toString() : colors(0))
     .style('stroke', (d) => d3.rgb(colors(0)).darker().toString())
-    .classed('reflexive', (d) => d.reflexive)
     .on('mouseover', function (d) {
       if (!mousedownNode || d === mousedownNode) return;
       // enlarge target node
@@ -263,19 +259,6 @@ function restart() {
       }
 
 
-    // g.append('svg:text')
-    //   .attr('x', 16)
-    //   .attr('y', 4)
-    //   .attr('class', 'shadow')
-    //   .text(makeAssignmentString);
-
-    // // text foreground
-    // g.append('svg:text')
-    //   .attr('x', 16)
-    //   .attr('y', 4)
-    //   .text(makeAssignmentString);
-
-
       // select new link
       selectedLink = link;
       selectedNode = null;
@@ -320,7 +303,7 @@ function mousedown() {
 
   // insert new node at point
   const point = d3.mouse(this);
-  const node = { id: ++lastNodeId, reflexive: false, x: point[0], y: point[1] };
+  const node = { id: ++lastNodeId, x: point[0], y: point[1] };
   nodes.push(node);
 
   restart();
@@ -402,21 +385,8 @@ function keydown() {
       }
       restart();
       break;
-    case 82: // R
-      if (selectedNode) {
-        // toggle node reflexivity
-        selectedNode.reflexive = !selectedNode.reflexive;
-      } else if (selectedLink) {
-        // set link direction to right only
-        selectedLink.left = false;
-        selectedLink.right = true;
-
-      }
-      restart();    
-      break;
     case 83: // S
-      console.log('in S')
-      if (selectedNode && selectedPlayer){
+      if (selectedNode && selectedPlayer != null){
         for (var player = 0; player < players.length; player++){
           if (players[player]['source'] == selectedNode.id) {
               players[player]['source'] = null
@@ -428,8 +398,7 @@ function keydown() {
       restart();
       break
     case 84: // T
-      console.log('in T')
-      if (selectedNode && selectedPlayer){
+      if (selectedNode && selectedPlayer !=null){
         for (var player = 0; player < players.length; player++){
           if (players[player]['target'] == selectedNode.id) {
               players[player]['target'] = null
@@ -454,6 +423,12 @@ function keyup() {
 }
 
 function selectPlayer(player){
+  buttons = document.getElementsByTagName('button')
+  for (var i = 0; i < players.length; i++){
+    buttons[i].classList.remove("active")
+  }
+  buttons[player].classList.add("active")
+
   selectedPlayer = player
 }
 
@@ -462,10 +437,9 @@ function selectPlayer(player){
 function makeAssignmentString(node) {
   var s = ""
   for (var player = 0; player < players.length; player++) {
-    console.log(player)
     if (node.id == players[player]["source"]){
       if (s=="") {
-          s = "S"+player.toString()
+          s = "S"+(player).toString()
       }else{
           s = s+ ", S"+player.toString()
       }

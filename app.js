@@ -25,6 +25,14 @@ const links = [
   // { source: nodes[1], target: nodes[2], left: false, right: true }
 ];
 
+players = [
+{"source":null, "target": null}, 
+{"source":null, "target": null}, 
+{"source":null, "target": null}, 
+{"source":null, "target": null}, 
+{"source":null, "target": null}
+]
+
 // init D3 force layout
 const force = d3.forceSimulation()
   .force('link', d3.forceLink().id((d) => d.id).distance(150))
@@ -92,6 +100,7 @@ let selectedLink = null;
 let mousedownLink = null;
 let mousedownNode = null;
 let mouseupNode = null;
+let selectedPlayer = null
 
 function resetMouseVars() {
   mousedownNode = null;
@@ -229,18 +238,45 @@ function restart() {
         links.push({ source, target, left: !isRight, right: isRight });
       }
 
+
+    // g.append('svg:text')
+    //   .attr('x', 16)
+    //   .attr('y', 4)
+    //   .attr('class', 'shadow')
+    //   .text(makeAssignmentString);
+
+    // // text foreground
+    // g.append('svg:text')
+    //   .attr('x', 16)
+    //   .attr('y', 4)
+    //   .text(makeAssignmentString);
+
+
       // select new link
       selectedLink = link;
       selectedNode = null;
+      selectedPlayer = null
       restart();
     });
 
   // show node IDs
+   g.append('svg:text')
+      .attr('x', 0)
+      .attr('y', 4)
+      .attr('class', 'id')
+      .text(function(d) { return d.id; });
+
+    g.append('svg:text')
+      .attr('x', 16)
+      .attr('y', 4)
+      .attr('class', 'shadow')
+      .text(makeAssignmentString);
+
+    // text foreground
   g.append('svg:text')
-    .attr('x', 0)
-    .attr('y', 4)
-    .attr('class', 'id')
-    .text((d) => d.id);
+      .attr('x', 16)
+      .attr('y', 4)
+      .text(makeAssignmentString);
 
   circle = g.merge(circle);
 
@@ -350,10 +386,37 @@ function keydown() {
         // set link direction to right only
         selectedLink.left = false;
         selectedLink.right = true;
+
       }
-      restart();
+      restart();    
       break;
-  }
+    case 83: // S
+      console.log('in S')
+      if (selectedNode && selectedPlayer){
+        for (var player = 0; player < players.length; player++){
+          if (players[player]['source'] == selectedNode.id) {
+              players[player]['source'] = null
+          }
+        }
+        players[selectedPlayer]['source'] = selectedNode.id
+      }
+      circle.selectAll('text:not(.id)').text(makeAssignmentString);
+      restart();
+      break
+    case 84: // T
+      console.log('in T')
+      if (selectedNode && selectedPlayer){
+        for (var player = 0; player < players.length; player++){
+          if (players[player]['target'] == selectedNode.id) {
+              players[player]['target'] = null
+          }
+        }
+        players[selectedPlayer]['target'] = selectedNode.id
+      }
+      circle.selectAll('text:not(.id)').text(makeAssignmentString);
+      restart();    
+      break;
+  } 
 }
 
 function keyup() {
@@ -364,6 +427,37 @@ function keyup() {
     circle.on('.drag', null);
     svg.classed('ctrl', false);
   }
+}
+
+function selectPlayer(player){
+  selectedPlayer = player
+}
+
+
+// get source and target strings
+function makeAssignmentString(node) {
+  var s = ""
+  for (var player = 0; player < players.length; player++) {
+    console.log(player)
+    if (node.id == players[player]["source"]){
+      if (s=="") {
+          s = "S"+player.toString()
+      }else{
+          s = s+ ", S"+player.toString()
+      }
+    }
+  }
+
+  for (var player = 0; player < players.length; player++) {
+    if (node.id == players[player]["target"]){
+      if (s=="") {
+          s = "T"+player.toString()
+      }else{
+          s = s+ ", T"+player.toString()
+      }
+    }
+  }
+  return s
 }
 
 // app starts here

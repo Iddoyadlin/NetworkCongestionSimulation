@@ -80,3 +80,42 @@ text.id {
     border: solid 1px #eee;
     border-bottom: solid 1px #ccc;
 }
+
+button { 
+white-space: nowrap;
+margin: 0;
+font-weight: normal;
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+display: inline-block;
+padding: 4px 12px;
+margin-bottom: 0;
+line-height: 20px;
+text-align: center;
+text-shadow: 0 1px 1px rgba(255,255,255,0.75);
+vertical-align: middle;
+cursor: pointer;
+background-repeat: repeat-x;
+border: 1px solid #bbb;
+border-color: rgba(0,0,0,0.15) rgba(0,0,0,0.15) rgba(0,0,0,0.25);
+background-color: #e6e6e6;
+color: #333;
+text-decoration: none;
+background-position: 0 -15px;
+transition: background-position .1s linear;
+background-image: none;
+outline: 0;
+box-shadow: inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);
+position: relative;
+border-radius: 0;
+font-size: 14px;
+margin-left: -1px;
+z-index: 2;
+}
+
+.btn.active, .btn:active {
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
+    -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
+}

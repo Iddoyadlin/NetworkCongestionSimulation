@@ -15,7 +15,7 @@ const svg = d3.select('#graph')
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
 const nodes = [
   { id: 0, reflexive: false },
-  { id: 1, reflexive: true },
+  { id: 1, reflexive: false },
   // { id: 2, reflexive: false }
 ];
 let lastNodeId = 1;
@@ -182,7 +182,7 @@ function restart() {
 
   // update existing nodes (reflexive & selected visual states)
   circle.selectAll('circle')
-    .style('fill', (d) => (d === selectedNode) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id))
+    .style('fill', (d) => (d === selectedNode) ? d3.rgb(colors(0)).brighter().toString() : colors(0))
     .classed('reflexive', (d) => d.reflexive);
 
   // remove old nodes
@@ -194,8 +194,8 @@ function restart() {
   g.append('svg:circle')
     .attr('class', 'node')
     .attr('r', 12)
-    .style('fill', (d) => (d === selectedNode) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id))
-    .style('stroke', (d) => d3.rgb(colors(d.id)).darker().toString())
+    .style('fill', (d) => (d === selectedNode) ? d3.rgb(colors(0)).brighter().toString() : colors(0))
+    .style('stroke', (d) => d3.rgb(colors(0)).darker().toString())
     .classed('reflexive', (d) => d.reflexive)
     .on('mouseover', function (d) {
       if (!mousedownNode || d === mousedownNode) return;

@@ -156,15 +156,15 @@ function restart() {
   linktext.enter().append("g").attr("class", "linklabelholder")
   .append("text")
   .attr("class", "linklabel")
-  .style("font-size", "13px")
-  .attr("x", "50")
-  .attr("y", "-20")
+  .style("font-size", "15px")
+  .attr("dx", "50")
+  .attr("dy", "-5")
   .attr("text-anchor", "start")
-  .style("fill","#000")
+  .style("fill","#00008B")
   .append("textPath")
   .attr("xlink:href",function(d,i) { return "#linkId_" + i;})
-  .text(function(d) { 
-      return "1"; //Can be dynamic via d object 
+  .text(function(d, i) { 
+      return i; //Can be dynamic via d object 
   });
 
   // circle (node) group

@@ -22,7 +22,6 @@
   				<button class='btn' onclick="selectPlayer(2)">2 </button>
   				<button class='btn' onclick="selectPlayer(3)">3 </button>
   				<button class='btn' onclick="selectPlayer(4)">4 </button>
-  			</div>
 
   			<div class="instructions"> 
   				<ul class="unstyled">
@@ -30,6 +29,7 @@
                   <li>Drag between states to <strong>add a transition</strong></li>
                   <li>Ctrl-drag a state to <strong>move</strong> graph layout</li>
                   <li>Click a state or a transition to <strong>select</strong> it</li>
+
                   <li>
                     When a state is selected:
                     <ul>
@@ -37,14 +37,16 @@
                       <li><strong>Delete</strong> removes the state</li>
                       <li><strong>S</strong> select as source state for current player</li>
                       <li><strong>T</strong> select as target state for current player</li>
+                      <li><strong>P</strong> select as next state for strategy of current player</li>
                     </ul>
                   </li>
                   <li>
                     When a transition is selected:
                     <ul>
                       <li><strong>L</strong>(eft), <strong>R</strong>(ight), <strong>B</strong>(oth) change direction</li>
+                      <li><strong>S</strong> add to strategy current player. strategy should begin with source and end with target of player</li>
                       <li><strong>Delete</strong> removes the transition</li>
-                      <li><strong>Ctrl</strong> edit the transition</li>
+                      <li><strong>Ctrl</strong> edit transition cost</li>
                     </ul>
                   </li>
                 </ul>

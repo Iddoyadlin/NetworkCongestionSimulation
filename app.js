@@ -3,6 +3,9 @@ const width = 960;
 const height = 500;
 const colors = d3.scaleOrdinal(d3.schemeCategory10);
 
+// set default active player
+
+
 const svg = d3.select('#graph')
   .append('svg')
   .on('contextmenu', () => { d3.event.preventDefault(); })
@@ -30,6 +33,11 @@ players = [
 {"source":null, "target": null}, 
 {"source":null, "target": null}
 ]
+
+
+
+strategies = [ [],[],[],[],[] ] //list of nodes for each player. first node should be source of player, last should be target of player
+
 
 // init D3 force layout
 const force = d3.forceSimulation()
@@ -99,6 +107,8 @@ let mousedownLink = null;
 let mousedownNode = null;
 let mouseupNode = null;
 let selectedPlayer = null
+
+
 
 function resetMouseVars() {
   mousedownNode = null;
@@ -180,7 +190,7 @@ function restart() {
 
   // update existing nodes (selected visual states)
   circle.selectAll('circle')
-    .style('fill', (d) => (d === selectedNode) ? d3.rgb(colors(0)).brighter().toString() : colors(0))
+    .style('fill', (d) => (d === selectedNode) ? d3.rgb(getNodeColor(d)).brighter().toString() : getNodeColor(d))
 
   // remove old nodes
   circle.exit().remove();
@@ -191,8 +201,8 @@ function restart() {
   g.append('svg:circle')
     .attr('class', 'node')
     .attr('r', 12)
-    .style('fill', (d) => (d === selectedNode) ? d3.rgb(colors(0)).brighter().toString() : colors(0))
-    .style('stroke', (d) => d3.rgb(colors(0)).darker().toString())
+    .style('fill', (d) => (d === selectedNode) ? d3.rgb(getNodeColor(d)).brighter().toString() : getNodeColor(d))
+    .style('stroke', (d) => d3.rgb(getNodeColor(d)).darker().toString())
     .on('mouseover', function (d) {
       if (!mousedownNode || d === mousedownNode) return;
       // enlarge target node
@@ -338,6 +348,50 @@ function spliceLinksForNode(node) {
   }
 }
 
+function removeNodeFromPlayers(node){
+  for (var player = 0; player < players.length; player++){
+          if (players[player]['source'] == node.id) {
+              players[player]['source'] = null
+          }
+          if (players[player]['target'] == node.id) {
+              players[player]['target'] = null
+              }
+
+        }
+}
+
+
+function checkIfinLinks(desired_source, desired_target){
+  //  - links are always source < target; edge directions are set by 'left' and 'right'.
+  if (desired_source< desired_target){
+    source= desired_source
+    target = desired_target
+    should_right=true
+    should_left=false
+  }else{
+    source= desired_target
+    target = desired_source
+    should_right=false
+    should_left=true
+  } 
+
+  for (var i = 0; i < links.length; i++) {
+    link = links[i]
+    is_edge= link['source'].id ==source && link['target'].id == target
+    is_direction= (should_left && link['left']) || (should_right && link['right'])
+    if (is_edge && is_direction){
+        return true
+      }
+    }
+
+  return false
+}
+
+function clearSelection(){
+  selectedLink = null;
+  selectedNode = null;
+}
+
 // only respond once per keydown
 let lastKeyDown = -1;
 
@@ -354,7 +408,7 @@ function keydown() {
     return;
   }
 
-  if (!selectedNode && !selectedLink) return;
+  if (selectedNode===null && !selectedLink) return;
 
   switch (d3.event.keyCode) {
     case 8: // backspace
@@ -362,11 +416,11 @@ function keydown() {
       if (selectedNode) {
         nodes.splice(nodes.indexOf(selectedNode), 1);
         spliceLinksForNode(selectedNode);
+        removeNodeFromPlayers(selectedNode)
       } else if (selectedLink) {
         links.splice(links.indexOf(selectedLink), 1);
       }
-      selectedLink = null;
-      selectedNode = null;
+      clearSelection()
       restart();
       break;
     case 66: // B
@@ -385,28 +439,56 @@ function keydown() {
       }
       restart();
       break;
-    case 83: // S
-      if (selectedNode && selectedPlayer != null){
-        for (var player = 0; player < players.length; player++){
-          if (players[player]['source'] == selectedNode.id) {
-              players[player]['source'] = null
-          }
-        }
-        players[selectedPlayer]['source'] = selectedNode.id
+    case 82: // R
+      if (selectedLink) {
+        // set link direction to left only
+        selectedLink.left = false;
+        selectedLink.right = true;
       }
-      circle.selectAll('text:not(.id)').text(makeAssignmentString);
+      restart();
+      break;
+    
+    case 80: // p
+      if (selectedNode!=null && selectedPlayer != null){
+        player_strategy = strategies[selectedPlayer]
+        if (player_strategy.length==0){
+          console.log('no source node')
+          return clearSelection()
+        }
+
+        lastNode= player_strategy[player_strategy.length-1]
+
+        if (player_strategy.includes(selectedNode.id)){
+          console.log('node already in strategy')
+          return clearSelection()
+        }
+        if (checkIfinLinks(lastNode, selectedNode.id)){
+          player_strategy.push(selectedNode.id)
+          console.log('added to player ' + selectedPlayer.toString() + ' strategy: ['+ player_strategy.toString() +']')
+        }
+      clearSelection()
       restart();
       break
-    case 84: // T
-      if (selectedNode && selectedPlayer !=null){
-        for (var player = 0; player < players.length; player++){
-          if (players[player]['target'] == selectedNode.id) {
-              players[player]['target'] = null
-          }
+    }
+    case 83: // S
+      if (selectedNode!=null && selectedPlayer != null){
+        if (players[selectedPlayer]['source'] != selectedNode.id){
+          strategies[selectedPlayer].length = 0 //empty array
+          strategies[selectedPlayer].push(selectedNode.id)
+          players[selectedPlayer]['source'] = selectedNode.id
         }
+      }
+      circle.selectAll('text:not(.id)').text(makeAssignmentString);
+      clearSelection()
+      restart();
+      break
+      
+    case 84: // T
+      if (selectedNode!=null && selectedPlayer !=null){
         players[selectedPlayer]['target'] = selectedNode.id
       }
       circle.selectAll('text:not(.id)').text(makeAssignmentString);
+      clearSelection()
       restart();    
       break;
   } 
@@ -424,14 +506,30 @@ function keyup() {
 
 function selectPlayer(player){
   buttons = document.getElementsByTagName('button')
-  for (var i = 0; i < players.length; i++){
+  for (var i = 0; i < buttons.length; i++){
     buttons[i].classList.remove("active")
+    buttons[i].style.backgroundColor = colors(i+1)
   }
   buttons[player].classList.add("active")
 
   selectedPlayer = player
+  restart()
 }
 
+
+function getNodeColor(node){
+  if (selectedPlayer==null){
+    return colors(0)
+  }
+  in_strategy = strategies[selectedPlayer].includes(node.id)
+  if (!in_strategy){
+    return colors(0)  
+  }
+  return colors(selectedPlayer+1)
+
+  
+
+}
 
 // get source and target strings
 function makeAssignmentString(node) {
@@ -465,4 +563,6 @@ svg.on('mousedown', mousedown)
 d3.select(window)
   .on('keydown', keydown)
   .on('keyup', keyup);
+
 restart();
+selectPlayer(0)

@@ -88,10 +88,27 @@ text.shadow {
 }
 
 
+button:not(.active) {
+  border: 1px solid #ccc;
+}
+
 .btn.active, .btn:active {
     background-image: none;
     outline: 0;
     -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
     -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
+    
+}
+
+.instructions{
+font-size: 14px;
+line-height: 20px;
+color: #333;
+font-family: 'Open Sans', sans-serif;
+position: absolute;
+bottom: 0;
+padding-top: 20px;
+margin-top: 20px;
+border-top: 1px solid #e3e3e3;
 }

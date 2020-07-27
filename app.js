@@ -34,10 +34,10 @@ players = [
 {"source":null, "target": null}
 ]
 
-
-
 strategies = [ [],[],[],[],[] ] //list of nodes for each player. first node should be source of player, last should be target of player
 
+// TODO: DANIEL: write function to get number of player strategies passing through edge
+// For total cost: RUN This function on all edges
 
 // init D3 force layout
 const force = d3.forceSimulation()
@@ -179,9 +179,9 @@ function restart() {
   .attr("text-anchor", "start")
   .style("fill","#00008B")
   .append("textPath")
-  .attr("xlink:href",function(d,i) { return "#linkId_" + i;})
-  .text(function(d, i) { 
-      return i; //Can be dynamic via d object 
+  .attr("xlink:href", function(d, i) { return "#linkId_" + i;})
+  .text(function(d) { 
+      return d.cost; //Can be dynamic via d object 
   });
 
   // circle (node) group
@@ -267,7 +267,6 @@ function restart() {
       } else {
         links.push({ source, target, left: !isRight, right: isRight });
       }
-
 
       // select new link
       selectedLink = link;
@@ -396,7 +395,6 @@ function clearSelection(){
 let lastKeyDown = -1;
 
 function keydown() {
-  d3.event.preventDefault();
 
   if (lastKeyDown !== -1) return;
   lastKeyDown = d3.event.keyCode;
@@ -494,6 +492,7 @@ function keydown() {
   } 
 }
 
+
 function keyup() {
   lastKeyDown = -1;
 
@@ -516,6 +515,34 @@ function selectPlayer(player){
   restart()
 }
 
+function submit(){
+  if (selectedLink) {
+    // set link cost function to user input
+    var temp = document.getElementById("cost").value;
+    var p = Polynomial(temp)
+    var ok = true
+
+    if (Object.values(p.coeff).every(function (e){ return !isNaN(e)})){
+      for (var i = 1; i < players.length + 1; i++){
+        if (p.eval(i) < 0){
+          alert("Cost function must be non-negative !")
+          ok = false
+          break;
+        }
+      }
+    }
+    else{
+      alert("Not a polynomial of x !")
+      ok = false
+    }
+    if (ok){
+      selectedLink.cost = temp
+    }
+    document.getElementById("cost").value = ""
+  }
+  clearSelection()
+  restart();
+}
 
 function getNodeColor(node){
   if (selectedPlayer==null){
@@ -631,9 +658,12 @@ function Dijkstra(source, target, links, nodes){
 svg.on('mousedown', mousedown)
   .on('mousemove', mousemove)
   .on('mouseup', mouseup);
+
 d3.select(window)
   .on('keydown', keydown)
   .on('keyup', keyup);
+
+
 
 restart();
 selectPlayer(0)

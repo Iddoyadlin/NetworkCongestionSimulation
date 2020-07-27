@@ -17,12 +17,12 @@ const svg = d3.select('#graph')
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
 const nodes = [
   { id: 0},
-  { id: 1},
+  //{ id: 1},
 ];
 let lastNodeId = 1;
 // let lastNodeId = 2;
 const links = [
-   { source: nodes[0], target: nodes[1], left: false, right: true },
+   //{ source: nodes[0], target: nodes[1], left: false, right: true },
   // { source: nodes[1], target: nodes[2], left: false, right: true }
 ];
 
@@ -302,7 +302,7 @@ function restart() {
     .nodes(nodes)
     .force('link').links(links);
 
-  force.alphaTarget(0.3).restart();
+  force.alphaTarget(0.01).restart();
 }
 
 function mousedown() {
@@ -527,8 +527,6 @@ function getNodeColor(node){
   }
   return colors(selectedPlayer+1)
 
-  
-
 }
 
 // get source and target strings
@@ -555,6 +553,79 @@ function makeAssignmentString(node) {
   }
   return s
 }
+
+
+function find_minimial_distance_node(Q, dist){
+  q_arr = Array.from(Q)
+  min_dist= Infinity
+  min_node= null
+  for (var i = 0; i < q_arr.length; i++){
+    node = q_arr[i]
+    //console.log("node is "+ node.toString() + "dist is" +dist[node].toString())
+    if (dist[node]<min_dist){
+      min_node = node
+      min_dist= dist[node]
+    }
+  }
+  console.log("min node is " + min_node.toString())
+
+  return min_node
+}
+
+function get_neighbors(u, Q){
+  q_arr = Array.from(Q)
+  neighbors = []
+  for (var i = 0; i < q_arr.length; i++){
+    v = q_arr[i]
+    if (checkIfinLinks(nodes[u].id, nodes[v].id)){
+      neighbors.push(v)
+    }
+  }
+return neighbors
+}
+
+
+function cost(u,v){
+  return 1
+}
+
+
+function Dijkstra(source, target, links, nodes){
+  prev = []
+  dist= []
+  Q = new Set()
+  for (var i = 0; i < nodes.length; i++){
+    if (nodes[i].id==source){
+      dist.push(0)  
+    }else{
+      dist.push(Infinity)  
+    }
+    prev.push(null)
+    Q.add(i)
+  }
+
+  while (Q.size>0){
+    u = find_minimial_distance_node(Q, dist)
+    Q.delete(u)
+    if (u==target){
+      break
+   }
+   neighbors = get_neighbors(u, Q)
+
+    for (var i = 0; i < neighbors.length; i++){
+      v = neighbors[i]
+      alt = dist[u] + cost(u, v)
+      if (alt < dist[v]){
+        dist[v]=alt 
+        prev[v]=u 
+      }               
+   }    
+  }
+  console.log("nodes are [" +nodes.toString() + "]")
+  console.log("distances are [" +dist.toString() + "]")
+  console.log("prevs are [" +prev.toString() + "]")
+}
+
 
 // app starts here
 svg.on('mousedown', mousedown)

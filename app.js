@@ -281,10 +281,11 @@ function restart() {
     if (selectedLink!=null){
         console.log('selected')
         cost_element.removeAttribute('placeholder')
-        cost_element.disabled=false
+        cost_element.disabled=false 
+        cost_element.focus()
     }else{
       console.log('not selected')
-      cost_element.setAttribute("placeholder", "please select edge")
+      cost_element.setAttribute("placeholder", "Please select edge")
       cost_element.disabled=true
     }
       
@@ -423,7 +424,7 @@ function keydown() {
   if (selectedNode===null && !selectedLink) return;
 
   switch (d3.event.keyCode) {
-    case 8: // backspace
+    //case 8: // backspace
     case 46: // delete
       if (selectedNode) {
         nodes.splice(nodes.indexOf(selectedNode), 1);

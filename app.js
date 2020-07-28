@@ -539,6 +539,7 @@ function submit(){
       selectedLink.cost = temp
     }
     document.getElementById("cost").value = ""
+    svg.selectAll('textPath').attr('href', '#linkId_' + selectedLink.id).text('')
   }
   clearSelection()
   restart();

@@ -123,3 +123,7 @@ li {
     padding-inline-start: 10px;
 
 }
+
+input[type=text]:disabled {
+  background: #dddddd;
+}

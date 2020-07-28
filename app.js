@@ -19,7 +19,7 @@ const nodes = [
   { id: 0},
   //{ id: 1},
 ];
-let lastNodeId = 1;
+let lastNodeId = 0;
 // let lastNodeId = 2;
 const links = [
    //{ source: nodes[0], target: nodes[1], left: false, right: true },
@@ -164,10 +164,12 @@ function restart() {
       // select link
       mousedownLink = d;
       selectedLink = (mousedownLink === selectedLink) ? null : mousedownLink;
+
       selectedNode = null;
       restart();
     })
     .merge(path);
+  
 
   var linktext = svg.append("svg:g").selectAll("g.linklabelholder").data(links);
   linktext.enter().append("g").attr("class", "linklabelholder")
@@ -274,6 +276,18 @@ function restart() {
       selectedPlayer = null
       restart();
     });
+
+    cost_element = document.getElementById("cost")
+    if (selectedLink!=null){
+        console.log('selected')
+        cost_element.removeAttribute('placeholder')
+        cost_element.disabled=false
+    }else{
+      console.log('not selected')
+      cost_element.setAttribute("placeholder", "please select edge")
+      cost_element.disabled=true
+    }
+      
 
   // show node IDs
    g.append('svg:text')
@@ -474,19 +488,21 @@ function keydown() {
           strategies[selectedPlayer].length = 0 //empty array
           strategies[selectedPlayer].push(selectedNode.id)
           players[selectedPlayer]['source'] = selectedNode.id
+          circle.selectAll('text:not(.id)').text(makeAssignmentString);
+          clearSelection()
         }
       }
-      circle.selectAll('text:not(.id)').text(makeAssignmentString);
-      clearSelection()
+      
       restart();
       break
       
     case 84: // T
       if (selectedNode!=null && selectedPlayer !=null){
         players[selectedPlayer]['target'] = selectedNode.id
+        circle.selectAll('text:not(.id)').text(makeAssignmentString);
+        clearSelection()
       }
-      circle.selectAll('text:not(.id)').text(makeAssignmentString);
-      clearSelection()
+      
       restart();    
       break;
   } 
@@ -504,7 +520,7 @@ function keyup() {
 }
 
 function selectPlayer(player){
-  buttons = document.getElementsByTagName('button')
+  buttons = document.getElementsByClassName('btn')
   for (var i = 0; i < buttons.length; i++){
     buttons[i].classList.remove("active")
     buttons[i].style.backgroundColor = colors(i+1)

@@ -63,7 +63,7 @@ text.shadow {
 
 #app-body {
     border: 1px solid #e3e3e3;
-    border-radius: 4px;
+    border-radius: 10px;
     width: 960px;
     height: 540px;
     position: relative;
@@ -91,18 +91,21 @@ text.shadow {
     border-bottom: solid 1px #ccc;
 }
 
-
 button:not(.active) {
   border: 1px solid #ccc;
 }
 
-.btn.active, .btn:active {
+.btn.active {
     background-image: none;
-    outline: 0;
-    -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
-    -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
+    border: 3px solid #000000;
+    outline: 4px;
+    border-radius: 5px;
     
+}
+
+button:focus {
+  outline:none;
+  box-shadow: none;
 }
 
 .instructions{

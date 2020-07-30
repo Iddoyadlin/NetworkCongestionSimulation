@@ -288,13 +288,11 @@ function restart() {
                 'fill': '#aaa'
             });
       } else {
-        links.push({ source, target, left: !isRight, right: isRight });
+        links.push({ source, target, left: !isRight, right: isRight, cost: 1});
       }
-
       // select new link
       selectedLink = link;
       selectedNode = null;
-      
       restart();
     });
 
@@ -574,7 +572,7 @@ function submit(){
       }
     }
     else{
-      alert("Not a polynomial of x !")
+      alert("Not a function x !")
       ok = false
     }
     if (ok){

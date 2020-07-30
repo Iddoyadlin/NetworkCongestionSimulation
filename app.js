@@ -39,12 +39,20 @@ strategies = [ [],[],[],[],[] ] //list of nodes for each player. first node shou
 // TODO: DANIEL: write function to get number of player strategies passing through edge
 // For total cost: RUN This function on all edges
 
+function gravity(alpha) {
+  return function(d) {
+    d.y += (d.cy - d.y) * alpha;
+    d.x += (d.cx - d.x) * alpha;
+  };
+}
+
 // init D3 force layout
 const force = d3.forceSimulation()
   .force('link', d3.forceLink().id((d) => d.id).distance(150))
   .force('charge', d3.forceManyBody().strength(-500))
   .force('x', d3.forceX(width / 2))
   .force('y', d3.forceY(height / 2))
+  .force("gravity",gravity(100))
   .on('tick', tick);
 
 // init D3 drag support
@@ -136,10 +144,10 @@ function tick() {
 
     if (d.cost!=null){
       if (sourceX < targetX){
-        svg.selectAll('textPath').attr('href', '#linkId_' + i).text(d.cost)
+        svg.selectAll('textPath').attr('href', '#linkId_' + d.index).text(d.cost.replace(/x/g, 'X'))
       }
       else{
-        svg.selectAll('textPath').attr('href', '#linkId_' + i).text(flipString(d.cost))
+        svg.selectAll('textPath').attr('href', '#linkId_' + d.index).text(flipString(d.cost))
       }
     }
 
@@ -190,8 +198,8 @@ function restart() {
   .attr("class", "linklabel")
   .style("font-size", "15px")
   .attr("dx", "50")
-  .attr("dy", "-5")
-  .attr("text-anchor", "start")
+  .attr("dy", "-7")
+  .attr("text-anchor", "middle")
   .style("fill","#00008B")
   .append("textPath")
   .attr("xlink:href", function(d, i) { return "#linkId_" + i;})
@@ -776,7 +784,7 @@ var flipTable = {
 '\u2234' : '\u2235',
 '2': '\u218A',
 '^': '\u2304',
-'x': '\u0058',
+'x': 'X',
 '1': '\u21c2'
 }
 

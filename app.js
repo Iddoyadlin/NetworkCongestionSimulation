@@ -142,14 +142,14 @@ function tick() {
     const targetX = d.target.x - (targetPadding * normX);
     const targetY = d.target.y - (targetPadding * normY);
 
-    if (d.cost!=null){
-      if (sourceX < targetX){
-        svg.selectAll('textPath').attr('href', '#linkId_' + d.index).text(d.cost.replace(/x/g, 'X'))
-      }
-      else{
-        svg.selectAll('textPath').attr('href', '#linkId_' + d.index).text(flipString(d.cost))
-      }
-    }
+    // if (d.cost!=null){
+    //   if (sourceX < targetX){
+    //     svg.selectAll('textPath').attr('href', '#linkId_' + d.index).text(d.cost.replace(/x/g, 'X'))
+    //   }
+    //   else{
+    //     svg.selectAll('textPath').attr('href', '#linkId_' + d.index).text(flipString(d.cost))
+    //   }
+    // }
 
 
     return `M${sourceX},${sourceY}L${targetX},${targetY}`;
@@ -298,17 +298,7 @@ function restart() {
       restart();
     });
 
-    cost_element = document.getElementById("cost")
-    if (selectedLink!=null){
-        console.log('selected')
-        cost_element.removeAttribute('placeholder')
-        cost_element.disabled=false 
-        cost_element.focus()
-    }else{
-      console.log('not selected')
-      cost_element.setAttribute("placeholder", "Please select edge")
-      cost_element.disabled=true
-    }
+    toggleCostElement()
       
 
   // show node IDs
@@ -425,6 +415,20 @@ function checkIfinLinks(desired_source, desired_target){
 function clearSelection(){
   selectedLink = null;
   selectedNode = null;
+}
+
+function toggleCostElement(){
+  cost_element = document.getElementById("cost")
+    if (selectedLink!=null){
+        console.log('selected')
+        cost_element.removeAttribute('placeholder')
+        cost_element.disabled=false 
+        cost_element.focus()
+    }else{
+      console.log('not selected')
+      cost_element.setAttribute("placeholder", "Please select edge")
+      cost_element.disabled=true
+    }
 }
 
 // only respond once per keydown

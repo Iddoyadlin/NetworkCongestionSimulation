@@ -77,11 +77,23 @@ function num_edge_users(link) {
 
 function edge_social_cost(link) {
   num_users = num_edge_users(link)
-
   if (num_users === 0){
     return null;
   }
   return Polynomial(link.cost).eval(num_users)
+}
+
+function potential() {
+  var res = 0
+  for (var link of path._groups[0]){
+    var users = num_edge_users(link.__data__)
+    if (users){
+      for (var i = 1; i <= users; i++){
+        res += Polynomial(link.__data__.cost).eval(i)
+      }
+    }
+  }
+  return res
 }
 
 function links_in_strategy(strategy) {

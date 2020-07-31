@@ -54,10 +54,17 @@ function gravity(alpha) {
   };
 }
 
+function link_source(link){
+  return link.right ? link.source : link.target
+}
+
+function link_target(link){
+  return link.right ? link.target : link.source
+}
+
 function num_edge_users(link) {
-  source = link.right ? link.source : link.target
-  target = link.right ? link.target : link.source
-    
+  source = link_source(link)
+  target = link_target(link)
   res = 0;
   for (strategy of strategies){
     for (var i = 0; i < strategy.length - 1; i++)
@@ -75,6 +82,27 @@ function edge_social_cost(link) {
     return null;
   }
   return Polynomial(link.cost).eval(num_users)
+}
+
+function links_in_strategy(strategy) {
+    var res = []
+    for (link of path._groups[0]){
+        link_d = link.__data__
+        src_idx = strategy.indexOf(link_source(link_d).id)
+        trg_idx = strategy.indexOf(link_target(link_d).id)
+        if (src_idx >= 0 && trg_idx >= 0 && trg_idx - src_idx === 1){
+            res.push(link_d)
+        }
+    }
+    return res
+}
+
+function player_cost(player) {
+    res = 0
+    for (link of links_in_strategy(strategies[player])){
+        res += edge_social_cost(link) / num_edge_users(link)
+    }
+    return res
 }
 
 function total_social_cost() {

@@ -61,8 +61,9 @@ const force = d3.forceSimulation()
   .force('charge', d3.forceManyBody().strength(-500))
   .force('x', d3.forceX(width / 2))
   .force('y', d3.forceY(height / 2))
-  .force("gravity",gravity(100))
+  .force("gravity",gravity())
   .on('tick', tick);
+
 
 // init D3 drag support
 const drag = d3.drag()
@@ -70,17 +71,20 @@ const drag = d3.drag()
   .filter(() => d3.event.button === 0 || d3.event.button === 2)
   .on('start', (d) => {
     if (!d3.event.active) force.alphaTarget(0.3).restart();
-
+    force.stop()
     d.fx = d.x;
     d.fy = d.y;
   })
   .on('drag', (d) => {
-    d.fx = d3.event.x;
-    d.fy = d3.event.y;
+     d.px += d3.event.dx;
+     d.py += d3.event.dy;
+     d.x += d3.event.dx;
+     d.y += d3.event.dy; 
+     tick();
   })
   .on('end', (d) => {
-    if (!d3.event.active) force.alphaTarget(0);
-
+    if (!d3.event.active) force.alphaTarget(0.0);
+    d.fixed=true
     d.fx = null;
     d.fy = null;
   });
@@ -334,7 +338,8 @@ function restart() {
     .nodes(nodes)
     .force('link').links(links);
 
-  force.alphaTarget(0.01).restart();
+  // force.alphaTarget(0.01).restart();
+  force.restart()
 }
 
 function mousedown() {

@@ -46,6 +46,15 @@ function gravity(alpha) {
   };
 }
 
+function edge_social_cost(link) {
+  num_users = 0 //number of players using the link
+
+  if (num_users == 0){
+    return null;
+  }
+  return Polynomial(link.cost).eval(num_users)
+}
+
 // init D3 force layout
 const force = d3.forceSimulation()
   .force('link', d3.forceLink().id((d) => d.id).distance(150))
@@ -650,11 +659,6 @@ function get_neighbors(u, Q){
     }
   }
 return neighbors
-}
-
-
-function cost(u,v){
-  return 1
 }
 
 

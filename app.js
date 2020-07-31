@@ -46,13 +46,35 @@ function gravity(alpha) {
   };
 }
 
-function edge_social_cost(link) {
-  num_users = 0 //number of players using the link
+function num_edge_users(link) {
+  source = link.right ? link.source : link.target
+  target = link.right ? link.target : link.source
+    
+  res = 0;
+  for (strategy of strategies){
+    for (var i = 0; i < strategy.length - 1; i++)
+      if (strategy[i] === source.id && strategy[i + 1] === target.id){
+        res++;
+      }
+  }
+  return res;
+}
 
-  if (num_users == 0){
+function edge_social_cost(link) {
+  num_users = num_edge_users(link)
+
+  if (num_users === 0){
     return null;
   }
   return Polynomial(link.cost).eval(num_users)
+}
+
+function total_social_cost() {
+  res = 0;
+  for (link of path._groups[0]){
+    res += edge_social_cost(link.__data__);
+  }
+  return res;
 }
 
 // init D3 force layout

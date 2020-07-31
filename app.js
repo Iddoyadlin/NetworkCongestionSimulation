@@ -47,13 +47,6 @@ strategies = [ [],[],[],[],[] ] //list of nodes for each player. first node shou
 // TODO: DANIEL: write function to get number of player strategies passing through edge
 // For total cost: RUN This function on all edges
 
-function gravity(alpha) {
-  return function(d) {
-    d.y += (d.cy - d.y) * alpha;
-    d.x += (d.cx - d.x) * alpha;
-  };
-}
-
 function edge_social_cost(link) {
   num_users = 0 //number of players using the link
 
@@ -69,7 +62,6 @@ const force = d3.forceSimulation()
   .force('charge', d3.forceManyBody().strength(-500))
   .force('x', d3.forceX(width / 2))
   .force('y', d3.forceY(height / 2))
-  .force("gravity",gravity())
   .on('tick', tick);
 
 
@@ -173,9 +165,11 @@ function tick() {
     // }
 
 
+    
+
     return `M${sourceX},${sourceY}L${targetX},${targetY}`;
   });
-
+  
   circle.attr('transform', (d) => `translate(${d.x},${d.y})`);
   
 }
@@ -440,12 +434,11 @@ function clearSelection(){
 function toggleCostElement(){
   cost_element = document.getElementById("cost")
     if (selectedLink!=null){
-        console.log('selected')
         cost_element.removeAttribute('placeholder')
         cost_element.disabled=false 
         cost_element.focus()
     }else{
-      console.log('not selected')
+      //console.log('not selected')
       cost_element.setAttribute("placeholder", "Please select edge")
       cost_element.disabled=true
     }

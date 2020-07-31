@@ -64,8 +64,8 @@ text.shadow {
 #app-body {
     border: 1px solid #e3e3e3;
     border-radius: 10px;
-    width: 960px;
-    height: 540px;
+    width: 100%;
+    height: 100%;
     position: relative;
     overflow: hidden;
     font-size: 14px;

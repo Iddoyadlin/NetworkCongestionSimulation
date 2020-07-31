@@ -1,6 +1,14 @@
 // set up SVG for D3
-const width = 960;
-const height = 500;
+
+var w=window,
+d=document,
+e=d.documentElement,
+g=d.getElementsByTagName('body')[0],
+x=w.innerWidth||e.clientWidth||g.clientWidth,
+y=w.innerHeight||e.clientHeight||g.clientHeight;
+
+const width = x;
+const height = y;
 const colors = d3.scaleOrdinal(d3.schemeCategory10);
 
 // set default active player

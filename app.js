@@ -30,7 +30,7 @@ const nodes = [
   { id: 3},
   //{ id: 1},
 ];
-let lastNodeId = 0;
+let lastNodeId = nodes.length-1;
 // let lastNodeId = 2;
 const links = [
    { source: nodes[0], target: nodes[1], left: false, right: true, cost:'x' },
@@ -617,7 +617,7 @@ function set_potential(){
 }
 
 
-function set_best_strategy(){
+function set_best_response(){
   graph = {nodes:nodes, links:links}
   var strategy = find_better_path(strategies, players, graph, selectedPlayer)
 
@@ -626,7 +626,7 @@ function set_best_strategy(){
   is_current_strategy_valid = current_strategy.length>0 && current_strategy[current_strategy.length-1] == players[selectedPlayer].target
 
   if ( !is_current_strategy_valid  || (strategy.path.length>0 && strategy.cost<player_cost(selectedPlayer, strategies, links))){
-    player_strategy[selectedPlayer] = strategy.path
+    strategies[selectedPlayer] = strategy.path
     restart()
   }
 }

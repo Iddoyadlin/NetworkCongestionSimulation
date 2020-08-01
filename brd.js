@@ -126,10 +126,7 @@ function find_better_path(strategies, players, graph, player){
   new_strategies = copy_strategies(strategies)
   new_strategies[player] = []
   new_strategy = Dijkstra(players[player].source,players[player].target, graph, new_strategies, player)
-  if (player_strategy==new_strategy){
-    return null
-  }return new_strategy
-
+  return new_strategy
 }
 
 function getLink(links, desired_source, desired_target){
@@ -207,7 +204,7 @@ function get_shortest_path(source_index, target_index, prev, nodes){
   if (prev[u] !=null || u==source_index){
     console.log('u is ' + u.toString())
     while (u!=null){
-      s.unshift(nodes[u])
+      s.unshift(nodes[u].id)
       u=prev[u]
     }
   }

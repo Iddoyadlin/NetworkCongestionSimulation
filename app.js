@@ -1,7 +1,4 @@
 // set up SVG for D3
-//import * as myModule from 'brd.js'
-
-
 
 var w=window,
 d=document,
@@ -44,8 +41,8 @@ const links = [
 ];
 
 players = [
-{"source":0, "target": 3}, 
-{"source":0, "target": 3}, 
+{"source":0, "target": 3},
+{"source":0, "target": 3},
 {"source":null, "target": null}, 
 {"source":null, "target": null}, 
 {"source":null, "target": null}
@@ -153,7 +150,7 @@ function tick() {
     const targetY = d.target.y - (targetPadding * normY);
     return `M${sourceX},${sourceY}L${targetX},${targetY}`;
   });
-  
+
   circle.attr('transform', (d) => `translate(${d.x},${d.y})`);
   
 }
@@ -400,7 +397,6 @@ function toggleCostElement(){
         cost_element.disabled=false 
         cost_element.focus()
     }else{
-      //console.log('not selected')
       cost_element.setAttribute("placeholder", "Please select edge")
       cost_element.disabled=true
     }

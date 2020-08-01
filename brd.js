@@ -54,7 +54,7 @@ function player_cost(player, strategies) {
 
 function total_social_cost(links, strategies) {
   res = 0;
-  for (link of links){
+  for (var link of links){
     e_social_cost = edge_social_cost(link, strategies);
     if (e_social_cost!=null){
       res += e_social_cost  
@@ -62,6 +62,19 @@ function total_social_cost(links, strategies) {
     
   }
   return res;
+}
+
+function potential(links, strategies) {
+  var res = 0
+  for (var link of links){
+    var users = num_edge_users(link, strategies)
+    if (users){
+      for (var i = 1; i <= users; i++){
+        res += Polynomial(link.cost).eval(i)
+      }
+    }
+  }
+  return res
 }
 
 

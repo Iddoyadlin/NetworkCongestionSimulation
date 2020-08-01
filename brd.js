@@ -10,7 +10,7 @@ function link_target(link){
 function num_edge_users(link, strategies, extra_players=0) {
   source = link_source(link)
   target = link_target(link)
-  res = extra_players;
+  var res = extra_players;
   for (strategy of strategies){
     for (var i = 0; i < strategy.length - 1; i++)
       if (strategy[i] === source.id && strategy[i + 1] === target.id){
@@ -32,6 +32,10 @@ function edge_player_switch_cost(link, strategies){
   return edge_social_cost(link, strategies, 1) / num_edge_users(link, strategies, 1)
 }
 
+function edge_player_cost(link, strategies){
+  return edge_social_cost(link, strategies) / num_edge_users(link, strategies)
+}
+
 function links_in_strategy(strategy, links) {
     var res = []
     for (link_d of links){
@@ -44,16 +48,16 @@ function links_in_strategy(strategy, links) {
     return res
 }
 
-function player_cost(player, strategies) {
-    res = 0
-    for (link of links_in_strategy(strategies[player])){
+function player_cost(player, strategies, links) {
+    var res = 0
+    for (link of links_in_strategy(strategies[player], links)){
         res += edge_player_cost(link, strategies)
     }
     return res
 }
 
 function total_social_cost(links, strategies) {
-  res = 0;
+  var res = 0;
   for (var link of links){
     e_social_cost = edge_social_cost(link, strategies);
     if (e_social_cost!=null){

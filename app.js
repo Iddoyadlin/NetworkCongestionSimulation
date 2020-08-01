@@ -123,7 +123,7 @@ let selectedLink = null;
 let mousedownLink = null;
 let mousedownNode = null;
 let mouseupNode = null;
-let selectedPlayer = null
+let selectedPlayer = null;
 
 
 
@@ -161,6 +161,11 @@ function tick() {
 // update graph (called when needed)
 function restart() {
   // path (link) group
+  if (selectedPlayer!=null){
+    set_player_cost()
+  }
+  set_social_cost()
+  set_potential()
 
   path = path.data(links);
 
@@ -471,7 +476,7 @@ function keydown() {
           console.log('node already in strategy')
           return clearSelection()
         }
-        if (getLink(lastNode, selectedNode.id)!=null){
+        if (getLink(links, lastNode, selectedNode.id)!=null){
           player_strategy.push(selectedNode.id)
           console.log('added to player ' + selectedPlayer.toString() + ' strategy: ['+ player_strategy.toString() +']')
         }
@@ -597,13 +602,18 @@ function makeAssignmentString(node) {
 
 
 function set_social_cost(){
-  player_cost_em = document.getElementById('social_cost')
-  player_cost_em.text = total_social_cost(links,strategies)
+  social_cost_em = document.getElementById('social_cost')
+  social_cost_em.text = total_social_cost(links,strategies)
 }
 
 function set_player_cost(){
-  player_cost_em = document.getElementById('social_cost')
-  player_cost_em.text = total_social_cost(links,strategies)
+  player_cost_em = document.getElementById('player_cost')
+  player_cost_em.text = player_cost(selectedPlayer, strategies, links)
+}
+
+function set_potential(){
+  potential_em = document.getElementById('potential')
+  potential_em.text = potential(links, strategies)
 }
 
 

@@ -617,6 +617,20 @@ function set_potential(){
 }
 
 
+function set_best_strategy(){
+  graph = {nodes:nodes, links:links}
+  var strategy = find_better_path(strategies, players, graph, selectedPlayer)
+
+  current_strategy = strategies[selectedPlayer]
+
+  is_current_strategy_valid = current_strategy.length>0 && current_strategy[current_strategy.length-1] == players[selectedPlayer].target
+
+  if ( !is_current_strategy_valid  || (strategy.path.length>0 && strategy.cost<player_cost(selectedPlayer, strategies, links))){
+    player_strategy[selectedPlayer] = strategy.path
+    restart()
+  }
+}
+
 // app starts here
 svg.on('mousedown', mousedown)
   .on('mousemove', mousemove)

@@ -11,6 +11,16 @@ const width = x;
 const height = y;
 const colors = d3.scaleOrdinal(d3.schemeCategory10);
 
+Polynomial.prototype.safeeval = function (num) {
+  var coeffs =  Object.values(this.coeff)
+  cond = function (e){ return e==0}
+  if (coeffs.some(cond) && coeffs.every(cond)){
+    return 0
+  }return this.eval()
+
+}
+
+
 // set default active player
 
 
@@ -542,7 +552,7 @@ function submit(){
 
     if (Object.values(p.coeff).every(function (e){ return !isNaN(e)})){
       for (var i = 1; i < players.length + 1; i++){
-        if (p.eval(i) < 0){
+        if (p.safeeval(i) < 0){
           alert("Cost function must be non-negative !")
           ok = false
           break;

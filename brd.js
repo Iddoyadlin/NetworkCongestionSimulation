@@ -1,4 +1,5 @@
 
+
 function link_source(link){
   return link.right ? link.source : link.target
 }
@@ -25,7 +26,7 @@ function edge_social_cost(link, strategies, extra_players=0) {
   if (num_users === 0){
     return null;
   }
-  return Polynomial(link.cost).eval(num_users)
+  return Polynomial(link.cost).safeeval(num_users)
 }
 
 function edge_player_switch_cost(link, strategies){
@@ -74,7 +75,7 @@ function potential(links, strategies) {
     var users = num_edge_users(link, strategies)
     if (users){
       for (var i = 1; i <= users; i++){
-        res += Polynomial(link.cost).eval(i)
+        res += Polynomial(link.cost).safeeval(i)
       }
     }
   }
@@ -177,14 +178,12 @@ function Dijkstra(source_id, target_id, graph, strategies, player){
   while (Q.size>0){
     u = find_minimial_distance_node(Q, dist)
     Q.delete(u)
-    if (u==target_index){
-      break
-   }
-   neighbors = get_neighbors(graph.links,u, Q)
+    neighbors = get_neighbors(graph.links,u, Q)
 
     for (v of neighbors){
-      alt = dist[u] + edge_player_switch_cost(link, strategies)
-      console.log('link is (' +u.toString(), ',' +v.toString()+')'+ ' alt is ' + alt.toString())
+      var link = getLink(graph.links, u,v);
+      alt = dist[u] + edge_player_switch_cost(link, strategies);
+      console.log('link is (' +u.toString(), ',' +v.toString()+')'+ ' alt is ' + alt.toString());
       if (alt < dist[v]){
         dist[v]=alt 
         prev[v]=u 

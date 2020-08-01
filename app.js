@@ -1,4 +1,7 @@
 // set up SVG for D3
+//import * as myModule from 'brd.js'
+
+
 
 var w=window,
 d=document,
@@ -25,36 +28,30 @@ const svg = d3.select('#graph')
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
 const nodes = [
   { id: 0},
+  { id: 1},
+  { id: 2},
+  { id: 3},
   //{ id: 1},
 ];
 let lastNodeId = 0;
 // let lastNodeId = 2;
 const links = [
-   //{ source: nodes[0], target: nodes[1], left: false, right: true },
-  // { source: nodes[1], target: nodes[2], left: false, right: true }
+   { source: nodes[0], target: nodes[1], left: false, right: true, cost:'x' },
+   { source: nodes[0], target: nodes[2], left: false, right: true, cost:'0.5' },
+   { source: nodes[1], target: nodes[2], left: true, right: true, cost: 0},
+   { source: nodes[1], target: nodes[3], left: false, right: true, cost: '0.5'},
+   { source: nodes[2], target: nodes[3], left: false, right: true, cost:'x' }
 ];
 
 players = [
-{"source":null, "target": null}, 
-{"source":null, "target": null}, 
+{"source":0, "target": 3}, 
+{"source":0, "target": 3}, 
 {"source":null, "target": null}, 
 {"source":null, "target": null}, 
 {"source":null, "target": null}
 ]
 
-strategies = [ [],[],[],[],[] ] //list of nodes for each player. first node should be source of player, last should be target of player
-
-// TODO: DANIEL: write function to get number of player strategies passing through edge
-// For total cost: RUN This function on all edges
-
-function edge_social_cost(link) {
-  num_users = 0 //number of players using the link
-
-  if (num_users == 0){
-    return null;
-  }
-  return Polynomial(link.cost).eval(num_users)
-}
+strategies = [ [0],[0],[],[],[] ] //list of nodes for each player. first node should be source of player, last should be target of player
 
 // init D3 force layout
 const force = d3.forceSimulation()
@@ -154,19 +151,6 @@ function tick() {
     const sourceY = d.source.y + (sourcePadding * normY);
     const targetX = d.target.x - (targetPadding * normX);
     const targetY = d.target.y - (targetPadding * normY);
-
-    // if (d.cost!=null){
-    //   if (sourceX < targetX){
-    //     svg.selectAll('textPath').attr('href', '#linkId_' + d.index).text(d.cost.replace(/x/g, 'X'))
-    //   }
-    //   else{
-    //     svg.selectAll('textPath').attr('href', '#linkId_' + d.index).text(flipString(d.cost))
-    //   }
-    // }
-
-
-    
-
     return `M${sourceX},${sourceY}L${targetX},${targetY}`;
   });
   
@@ -174,9 +158,13 @@ function tick() {
   
 }
 
+
+
+
 // update graph (called when needed)
 function restart() {
   // path (link) group
+
   path = path.data(links);
 
   // update existing links
@@ -400,32 +388,6 @@ function removeNodeFromPlayers(node){
 }
 
 
-function checkIfinLinks(desired_source, desired_target){
-  //  - links are always source < target; edge directions are set by 'left' and 'right'.
-  if (desired_source< desired_target){
-    source= desired_source
-    target = desired_target
-    should_right=true
-    should_left=false
-  }else{
-    source= desired_target
-    target = desired_source
-    should_right=false
-    should_left=true
-  } 
-
-  for (var i = 0; i < links.length; i++) {
-    link = links[i]
-    is_edge= link['source'].id ==source && link['target'].id == target
-    is_direction= (should_left && link['left']) || (should_right && link['right'])
-    if (is_edge && is_direction){
-        return true
-      }
-    }
-
-  return false
-}
-
 function clearSelection(){
   selectedLink = null;
   selectedNode = null;
@@ -513,7 +475,7 @@ function keydown() {
           console.log('node already in strategy')
           return clearSelection()
         }
-        if (checkIfinLinks(lastNode, selectedNode.id)){
+        if (getLink(lastNode, selectedNode.id)!=null){
           player_strategy.push(selectedNode.id)
           console.log('added to player ' + selectedPlayer.toString() + ' strategy: ['+ player_strategy.toString() +']')
         }
@@ -559,7 +521,7 @@ function keyup() {
 }
 
 function selectPlayer(player){
-  buttons = document.getElementsByClassName('btn')
+  buttons = document.getElementsByClassName('btn-secondary')
   for (var i = 0; i < buttons.length; i++){
     buttons[i].classList.remove("active")
     buttons[i].style.backgroundColor = colors(i+1)
@@ -587,7 +549,7 @@ function submit(){
       }
     }
     else{
-      alert("Not a function x !")
+      alert("Not a function of x !")
       ok = false
     }
     if (ok){
@@ -638,70 +600,14 @@ function makeAssignmentString(node) {
 }
 
 
-function find_minimial_distance_node(Q, dist){
-  q_arr = Array.from(Q)
-  min_dist= Infinity
-  min_node= null
-  for (var i = 0; i < q_arr.length; i++){
-    node = q_arr[i]
-    //console.log("node is "+ node.toString() + "dist is" +dist[node].toString())
-    if (dist[node]<min_dist){
-      min_node = node
-      min_dist= dist[node]
-    }
-  }
-  console.log("min node is " + min_node.toString())
-
-  return min_node
+function set_social_cost(){
+  player_cost_em = document.getElementById('social_cost')
+  player_cost_em.text = total_social_cost(links,strategies)
 }
 
-function get_neighbors(u, Q){
-  q_arr = Array.from(Q)
-  neighbors = []
-  for (var i = 0; i < q_arr.length; i++){
-    v = q_arr[i]
-    if (checkIfinLinks(nodes[u].id, nodes[v].id)){
-      neighbors.push(v)
-    }
-  }
-return neighbors
-}
-
-
-function Dijkstra(source, target, links, nodes){
-  prev = []
-  dist= []
-  Q = new Set()
-  for (var i = 0; i < nodes.length; i++){
-    if (nodes[i].id==source){
-      dist.push(0)  
-    }else{
-      dist.push(Infinity)  
-    }
-    prev.push(null)
-    Q.add(i)
-  }
-
-  while (Q.size>0){
-    u = find_minimial_distance_node(Q, dist)
-    Q.delete(u)
-    if (u==target){
-      break
-   }
-   neighbors = get_neighbors(u, Q)
-
-    for (var i = 0; i < neighbors.length; i++){
-      v = neighbors[i]
-      alt = dist[u] + cost(u, v)
-      if (alt < dist[v]){
-        dist[v]=alt 
-        prev[v]=u 
-      }               
-   }    
-  }
-  console.log("nodes are [" +nodes.toString() + "]")
-  console.log("distances are [" +dist.toString() + "]")
-  console.log("prevs are [" +prev.toString() + "]")
+function set_player_cost(){
+  player_cost_em = document.getElementById('social_cost')
+  player_cost_em.text = total_social_cost(links,strategies)
 }
 
 
@@ -718,89 +624,3 @@ d3.select(window)
 
 restart();
 selectPlayer(0)
-
-
-
-function flipString(aString)
-{
-  var last = aString.length - 1;
-  //Thanks to Brook Monroe for the
-  //suggestion to use Array.join
-  var result = new Array(aString.length)
-  for (var i = last; i >= 0; --i)
-  {
-    var c = aString.charAt(i)
-    var r = flipTable[c]
-    result[last - i] = r != undefined ? r : c
-  }
-  return result.join('')
-}
-
-var flipTable = {
-'\u0021' : '\u00A1',
-'\u0022' : '\u201E',
-'\u0026' : '\u214B',
-'\u0027' : '\u002C',
-'\u0028' : '\u0029',
-'\u002E' : '\u02D9',
-'\u0033' : '\u0190',
-'\u0034' : '\u152D',
-'\u0036' : '\u0039',
-'\u0037' : '\u2C62',
-'\u003B' : '\u061B',
-'\u003C' : '\u003E',
-'\u003F' : '\u00BF',
-'\u0041' : '\u2200',
-'\u0042' : '\u10412',
-'\u0043' : '\u2183',
-'\u0044' : '\u25D6',
-'\u0045' : '\u018E',
-'\u0046' : '\u2132',
-'\u0047' : '\u2141',
-'\u004A' : '\u017F',
-'\u004B' : '\u22CA',
-'\u004C' : '\u2142',
-'\u004D' : '\u0057',
-'\u004E' : '\u1D0E',
-'\u0050' : '\u0500',
-'\u0051' : '\u038C',
-'\u0052' : '\u1D1A',
-'\u0054' : '\u22A5',
-'\u0055' : '\u2229',
-'\u0056' : '\u1D27',
-'\u0059' : '\u2144',
-'\u005B' : '\u005D',
-'\u005F' : '\u203E',
-'\u0061' : '\u0250',
-'\u0062' : '\u0071',
-'\u0063' : '\u0254',
-'\u0064' : '\u0070',
-'\u0065' : '\u01DD',
-'\u0066' : '\u025F',
-'\u0067' : '\u0183',
-'\u0068' : '\u0265',
-'\u0069' : '\u0131',
-'\u006A' : '\u027E',
-'\u006B' : '\u029E',
-'\u006C' : '\u0283',
-'\u006D' : '\u026F',
-'\u006E' : '\u0075',
-'\u0072' : '\u0279',
-'\u0074' : '\u0287',
-'\u0076' : '\u028C',
-'\u0077' : '\u028D',
-'\u0079' : '\u028E',
-'\u007B' : '\u007D',
-'\u203F' : '\u2040',
-'\u2045' : '\u2046',
-'\u2234' : '\u2235',
-'2': '\u218A',
-'^': '\u2304',
-'x': 'X',
-'1': '\u21c2'
-}
-
-for (i in flipTable)
-{
-  flipTable[flipTable[i]] = i
-}

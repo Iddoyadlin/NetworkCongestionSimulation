@@ -17,11 +17,26 @@
   				Select player settings:
   			</div>
   			<div class="btn-group">
-  				<button class='btn' onclick="selectPlayer(0)">0 </button>
-  				<button class='btn' onclick="selectPlayer(1)">1 </button>
-  				<button class='btn' onclick="selectPlayer(2)">2 </button>
-  				<button class='btn' onclick="selectPlayer(3)">3 </button>
-  				<button class='btn' onclick="selectPlayer(4)">4 </button>
+  				<button class='btn btn-secondary' onclick="selectPlayer(0)">0 </button>
+  				<button class='btn btn-secondary' onclick="selectPlayer(1)">1 </button>
+  				<button class='btn btn-secondary' onclick="selectPlayer(2)">2 </button>
+  				<button class='btn btn-secondary' onclick="selectPlayer(3)">3 </button>
+  				<button class='btn btn-secondary' onclick="selectPlayer(4)">4 </button>
+
+  			</div>
+  			<div>
+		      <br>
+		        Edge cost : <input type="text" id="cost" disabled="true">
+		        <button onclick="submit()">Submit </button>
+		     </div>
+
+		     <div class="status"> 
+		     	<li>player cost- <a id=player_cost> </a> </li>
+		     	<li>social cost- <a id=social_cost> </a> </li>
+		     	<li>potential- <a id=potential> </a> </li>
+		     	</li>
+
+		     </div>
 
   			<div class="instructions"> 
   				<ul class="unstyled">
@@ -49,20 +64,15 @@
                     </ul>
                   </li>
                 </ul>
-        </div>
-      
-      </div>
-      <br>
-        Edge cost : <input type="text" id="cost" disabled="true">
-        <button onclick="submit()">Submit </button>
-      </div>
-
-  		<div id=graph> </div>	
+        	</div>
   	</div>
-  	
+  	<div id=graph> </div>	
+  	</div>
   </body>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
 
+  <script src="brd.js"></script>
   <script src="app.js"></script>
+
 </html>

@@ -155,3 +155,9 @@ li {
 input[type=text]:disabled {
   background: #dddddd;
 }
+
+input{
+  float:left;
+  margin-right:5px;
+}
+}

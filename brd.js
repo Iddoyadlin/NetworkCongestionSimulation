@@ -88,7 +88,6 @@ function find_minimial_distance_node(Q, dist){
   min_node= null
   for (var i = 0; i < q_arr.length; i++){
     node = q_arr[i]
-    //console.log("node is "+ node.toString() + "dist is" +dist[node].toString())
     if (dist[node]<min_dist){
       min_node = node
       min_dist= dist[node]

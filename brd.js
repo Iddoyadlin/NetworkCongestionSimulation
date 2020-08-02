@@ -155,7 +155,60 @@ function getLink(links, desired_source, desired_target){
   return null
 }
 
-function Dijkstra(source_id, target_id, graph, strategies, player){
+function isValidStrategy(strategy, players, player){
+  return strategy!=null && strategy.length>0 && strategy[strategy.length-1] == players[player].target
+}
+
+function getBetterStrategyIfExists(graph, strategies, players, player){
+  var strategy = find_better_path(strategies, players, graph, player)
+  if (!isValidStrategy(strategy, players, player)){
+    return null
+  }
+  var current_strategy = strategies[player]
+  var isImproving= !isValidStrategy(current_strategy, players, player)  || (strategy.path.length>0 && strategy.cost< player_cost(player, strategies, links))
+  if (isImproving){
+    return strategy;
+  return null;
+}
+
+function PickStrategy(G, strategies, players, player){
+
+  if (!isValidStrategy(strategies[player], players, player))
+      strategy = getBetterStrategyIfExists(G, strategies, players, player)
+      strategies[player] = strategy
+      if (strategy==null){
+        console.log('no valid strategy for player ' + player.toString()) 
+      }
+}
+
+function BestResponseDynamics(G, strategies, players){
+  var strategies  = copy_strategies(strategies)
+  for (var player = 0; player < q_arr.length; i++){
+    PickStrategy(G, strategies, players, player)
+  }
+
+  all_strategies = [];
+  do {
+    all_strategies.push(copy_strategies(strategies))
+    NE = true
+    for (var player = 0; player < q_arr.length; i++){
+      invalid_strategy = strategies[player] ==null
+      if (invalid_strategy){
+        continue
+      }
+      new_strategy = getBetterStrategyIfExists(G, strategies, players, player)
+      if (new_strategy!=null){
+        strategies[player] = new_strategy
+        NE = false
+      }
+    }
+  }
+  while (!NE);
+
+return all_strategies
+}
+
+function Dijkstra(source_id, target_id, graph, strategies){
   source_index = graph.nodes.findIndex( function (node) {return node.id==source_id})
   target_index = graph.nodes.findIndex( function (node) {return node.id==target_id})
   console.log('source_index is ' + source_index.toString())

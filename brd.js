@@ -108,7 +108,7 @@ function get_neighbors(links, u, Q){
       neighbors.push(v)
     }
   }
-return neighbors
+    return neighbors
 }
 
 
@@ -168,6 +168,7 @@ function getBetterStrategyIfExists(graph, strategies, players, player){
   var isImproving= !isValidStrategy(current_strategy, players, player)  || (strategy.path.length>0 && strategy.cost< player_cost(player, strategies, links))
   if (isImproving){
     return strategy;
+    }
   return null;
 }
 
@@ -177,7 +178,7 @@ function PickStrategy(G, strategies, players, player){
       strategy = getBetterStrategyIfExists(G, strategies, players, player)
       strategies[player] = strategy
       if (strategy==null){
-        console.log('no valid strategy for player ' + player.toString()) 
+        console.log('no valid strategy for player ' + player.toString())
       }
 }
 
@@ -204,8 +205,7 @@ function BestResponseDynamics(G, strategies, players){
     }
   }
   while (!NE);
-
-return all_strategies
+  return all_strategies
 }
 
 function Dijkstra(source_id, target_id, graph, strategies){
@@ -261,5 +261,4 @@ function get_shortest_path(source_index, target_index, prev, nodes){
     }
   }
   return s
-
 }

@@ -26,7 +26,7 @@ function edge_social_cost(link, strategies, extra_players=0) {
   if (num_users === 0){
     return null;
   }
-  return Polynomial(link.cost).safeeval(num_users)
+  return Polynomial(link.cost).eval(num_users)
 }
 
 function edge_player_switch_cost(link, strategies){
@@ -75,7 +75,7 @@ function potential(links, strategies) {
     var users = num_edge_users(link, strategies)
     if (users){
       for (var i = 1; i <= users; i++){
-        res += Polynomial(link.cost).safeeval(i)
+        res += Polynomial(link.cost).eval(i)
       }
     }
   }

@@ -3,77 +3,123 @@
   <head>
     <meta charset="utf-8">
     <title>Network Congestion Simulation</title>
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700">
     <link rel="stylesheet" href="app.css">
     <script src="polynomial.min.js"></script>
   </head>
 
   <body>
-  	<div>
-  		<h1> Network Congestion Simulation </h1>
-  	 </div>
-  	<div id=app-body>
-  		<div id=left-panel> 
-  			<div>
-  				Select player settings:
-  			</div>
-  			<div class="btn-group">
-  				<button class='btn btn-secondary' onclick="selectPlayer(0)">0 </button>
-  				<button class='btn btn-secondary' onclick="selectPlayer(1)">1 </button>
-  				<button class='btn btn-secondary' onclick="selectPlayer(2)">2 </button>
-  				<button class='btn btn-secondary' onclick="selectPlayer(3)">3 </button>
-  				<button class='btn btn-secondary' onclick="selectPlayer(4)">4 </button>
+    <div id="page-container">
+		<a href="https://github.com/Iddoyadlin/NetworkCongestionSimulation"><img class="github-link" src="img/blacktocat-32.png" title="Fork me on GitHub"></a>
+		<h1>Network Congestion Simulation</h1>
+		<section id="app">
+		<div id=app-body>
+			<div id=left-panel> 
+				<div>
+					Select player settings:
+				</div>
+				<div class="btn-group">
+					<button class='btn btn-secondary' onclick="selectPlayer(0)">0 </button>
+					<button class='btn btn-secondary' onclick="selectPlayer(1)">1 </button>
+					<button class='btn btn-secondary' onclick="selectPlayer(2)">2 </button>
+					<button class='btn btn-secondary' onclick="selectPlayer(3)">3 </button>
+					<button class='btn btn-secondary' onclick="selectPlayer(4)">4 </button>
 
-  			</div>
-  			<div>
-		        <button class="submit" onclick="set_best_response()">Best response </button>
-		     </div>
+				</div>
+				<div>
+					<button class="submit" onclick="set_best_response()">Best response </button>
+				</div>
 
-  			<div>
-		      <br>
-		        Edge cost : <br><input type="text" id="cost" disabled="true">
-		        <button class="submit" onclick="submit()">Submit </button>
-		     </div>
+				<div>
+				<br>
+					Edge cost : <br><input type="text" id="cost" disabled="true">
+					<button class="submit" onclick="submit()">Submit </button>
+				</div>
 
-		     <div class="status"> 
-		     	Configuration:
-		     	<li>player cost- <a id=player_cost> </a> </li>
-		     	<li>social cost- <a id=social_cost> </a> </li>
-		     	<li>potential- <a id=potential> </a> </li>
-		     	</li>
+				<div class="status"> 
+					Configuration:
+					<li>player cost- <a id=player_cost> </a> </li>
+					<li>social cost- <a id=social_cost> </a> </li>
+					<li>potential- <a id=potential> </a> </li>
+					</li>
 
-		     </div>
+				</div>
 
-  			<div class="instructions"> 
-  				<ul class="unstyled">
-                  <li>Click in the open space to <strong>add a state</strong></li>
-                  <li>Drag between states to <strong>add a transition</strong></li>
-                  <li>Ctrl-drag a state to <strong>move</strong> graph layout</li>
-                  <li>Click a state or a transition to <strong>select</strong> it</li>
+				<div class="instructions"> 
+					<ul class="unstyled">
+					<li>Click in the open space to <strong>add a state</strong></li>
+					<li>Drag between states to <strong>add a transition</strong></li>
+					<li>Ctrl-drag a state to <strong>move</strong> graph layout</li>
+					<li>Click a state or a transition to <strong>select</strong> it</li>
 
-                  <li>
-                    When a state is selected:
-                    <ul>
-                      <li><strong>Delete</strong> removes the state</li>
-                      <li><strong>S</strong> select as source state for current player</li>
-                      <li><strong>T</strong> select as target state for current player</li>
-                      <li><strong>P</strong> select as next state for strategy of current player</li>
-                    </ul>
-                  </li>
-                  <li>
-                    When a transition is selected:
-                    <ul>
-                      <li><strong>L</strong>(eft), <strong>R</strong>(ight), <strong>B</strong>(oth) change direction</li>
-                      <li><strong>Delete</strong> removes the transition</li>
-                      <li><strong>Ctrl</strong> edit transition cost</li>
-                    </ul>
-                  </li>
-                </ul>
-        	</div>
-  	</div>
-  	<div id=graph> </div>	
-  	</div>
-  </body>
+					<li>
+						When a state is selected:
+						<ul>
+						<li><strong>Delete</strong> removes the state</li>
+						<li><strong>S</strong> select as source state for current player</li>
+						<li><strong>T</strong> select as target state for current player</li>
+						<li><strong>P</strong> select as next state for strategy of current player</li>
+						</ul>
+					</li>
+					<li>
+						When a transition is selected:
+						<ul>
+						<li><strong>L</strong>(eft), <strong>R</strong>(ight), <strong>B</strong>(oth) change direction</li>
+						<li><strong>Delete</strong> removes the transition</li>
+						<li><strong>Ctrl</strong> edit transition cost</li>
+						</ul>
+					</li>
+					</ul>
+				</div>
+		</div>
+		<div id=graph> </div>	
+		</div>
+	</section>
+	<section id="whatis">
+	  <h2>What is a Network Congestion Game?</h2>
+	  <p>
+		<strong>Network Congestion Games</strong> are a type of strategic games where each player chooses a subset from a set of resources,
+		and <strong>the cost of each resource dependes on the number of players who chose it</strong>. <br>
+		Each player's selection is called his <strong>strategy</strong>, and the set of all strategies for all players is called a <strong>profile</strong>. <br>
+	  </p>
+	  <p>
+		Congestion games belong to a special class of potential games considered in game theory.
+		Potential games always have a <strong>Nash Equilibrium (NE)</strong> - a profile for which no player has an incentive to switch his strategy.  <br>
+		Our simultation visualizes the <strong>Best Response Dynamics (BRD)</strong> algorithm, which finds the NE in any congestion game you define.
+	  </p>
+	  <h3>Example for a congestion game</h3>
+	  <img src="img/example.png" alt="Congestion Game Example" width="500" height="300">
+	  <p>
+		Consider the example above: players A,B and C have to go from point S to T using road segments SX, XY,...etc.  <br>
+		Numbers on edges denote the cost for a single user for using the corresponding road segment, where the actual  <br>
+		cost is a function of the actual number of players using that road segment(i.e. a descrete delay function).  <br>
+		For example: if segment SX is used by a 1,2, or 3 users, the cost on that segment would be 2,3, or 5, respectively.  <br>
+		The total cost of each player is the sum of all segments he uses. Note that the players are therefore engaged in a  <br>
+		game which can be represented in a strategic form(as a cost matrix).
+	  </p>
+	  <h2>References</h2>
+	  <p>
+		If you're curious to learn more, here are a few useful resources:
+	  </p>
+	  <ul class="unstyled">
+		<li>
+			<a href="https://www.tau.ac.il/~mansour/course_games/scribe/lecture6.pdf" target="_blank">Lecture on congestion and potential games @ Tel-Aviv University</a>
+			<p></p>
+		</li>
+		<li>
+		  <a href="https://en.wikipedia.org/wiki/Congestion_game" target="_blank">Congestion game @ Wikipedia</a>
+		  <p></p>
+		</li>
+		<li>
+		  <a href="https://www.cs.rpi.edu/~eanshel/papers/ConnectionGame.pdf" target="_blank">Near-optimal network design with selfish agents (Anshelevich et al., 2003)</a>
+		  <p></p>
+		</li>
+	  </ul>
+	</section>
+	<footer>
+	  Network Congestion Simulation is a creation of <a href="https://github.com/Iddoyadlin">Iddo Yadlin</a> and <a href="https://github.com/danielkorat">Daniel Korat</a>, released under the <a href="http://opensource.org/licenses/mit-license.php">MIT License</a>.
+	</footer>
+  </div>
+</body>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
 

@@ -65,7 +65,7 @@ const force = d3.forceSimulation()
   .force('link', d3.forceLink().id((d) => d.id).distance(150))
   .force('charge', d3.forceManyBody().strength(-500))
   .force('x', d3.forceX(width / 2))
-  .force('y', d3.forceY(height / 2))
+  .force('y', d3.forceY(height / 3))
   .on('tick', tick);
 
 

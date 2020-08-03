@@ -1,3 +1,32 @@
+  
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+img.github-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+h1 {
+  font-size: 32px;
+  line-height: 48px;
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 300;
+}
+
+h3 {
+  font-size: 20px;
+  line-height: 36px;
+  font-weight: 300;
+}
+
+
 svg {
   background-color: #FFF;
   cursor: default;
@@ -65,7 +94,7 @@ text.shadow {
     border: 1px solid #e3e3e3;
     border-radius: 10px;
     width: 100%;
-    height: 100%;
+    height: 800px;
     position: relative;
     overflow: hidden;
     font-size: 14px;
@@ -76,7 +105,7 @@ text.shadow {
 
 #left-panel {
   width: 280px;
-  height: 700px;  
+  height: 760px;  
   padding: 20px 19px 20px 20px;
   background-color: #f5f5f5;
   border-right: 1px solid #e3e3e3;
@@ -84,7 +113,7 @@ text.shadow {
   position: absolute;
   left: 0;
 }
-}
+
 
 #graph {
     border: solid 1px #eee;
@@ -159,5 +188,4 @@ input[type=text]:disabled {
 input{
   float:left;
   margin-right:5px;
-}
 }

@@ -122,7 +122,7 @@ function copy_strategies(strategies){
 }
 
 
-function find_better_path(strategies, players, graph, player){
+function findBetterStrategy(strategies, players, graph, player){
   player_strategy = strategies[player]
   new_strategies = copy_strategies(strategies)
   new_strategies[player] = []
@@ -155,17 +155,17 @@ function getLink(links, desired_source, desired_target){
   return null
 }
 
-function isValidStrategy(strategy, players, player){
-  return strategy!=null && strategy.length>0 && strategy[strategy.length-1] == players[player].target
+function isValidStrategyPath(strategyPath, players, player){
+  return strategyPath!=null && strategyPath.length>0 && strategyPath[strategyPath.length-1] == players[player].target
 }
 
 function getBetterStrategyIfExists(graph, strategies, players, player){
-  var strategy = find_better_path(strategies, players, graph, player)
-  if (!isValidStrategy(strategy, players, player)){
+  var strategy = findBetterStrategy(strategies, players, graph, player)
+  if (!isValidStrategyPath(strategy.path, players, player)){
     return null
   }
   var current_strategy = strategies[player]
-  var isImproving= !isValidStrategy(current_strategy, players, player)  || (strategy.path.length>0 && strategy.cost< player_cost(player, strategies, links))
+  var isImproving= !isValidStrategyPath(current_strategy, players, player)  ||  strategy.cost< player_cost(player, strategies, links)
   if (isImproving){
     return strategy;
     }
@@ -199,7 +199,7 @@ function BestResponseDynamics(G, strategies, players){
       }
       new_strategy = getBetterStrategyIfExists(G, strategies, players, player)
       if (new_strategy!=null){
-        strategies[player] = new_strategy
+        strategies[player] = new_strategy.path
         NE = false
       }
     }

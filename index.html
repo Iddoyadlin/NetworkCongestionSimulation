@@ -3,14 +3,76 @@
   <head>
     <meta charset="utf-8">
     <title>Network Congestion Simulation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="app.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="polynomial.min.js"></script>
   </head>
 
   <body>
     <div id="page-container">
 		<a href="https://github.com/Iddoyadlin/NetworkCongestionSimulation"><img class="github-link" src="img/blacktocat-32.png" title="Fork me on GitHub"></a>
+		
+		<div class="container">
+					  <!-- Button to Open the Modal -->
+					  
+
+					  <!-- The Modal -->
+					  <div class="modal" id="myModal">
+					    <div class="modal-dialog">
+					      <div class="modal-content">
+					      
+					        <!-- Modal Header -->
+					        <div class="modal-header">
+					          <h1 class="modal-title">Configuring the network</h1>
+					          <button type="button" class="close" data-dismiss="modal">×</button>
+					        </div>
+					        
+					        <!-- Modal body -->
+					        <div class="modal-body">
+								<ul class="unstyled">
+								<li>Click in the open space to <strong>add a state</strong></li>
+								<li>Drag between states to <strong>add a transition</strong></li>
+								<li>Ctrl-drag a state to <strong>move</strong> graph layout</li>
+								<li>Click a state or a transition to <strong>select</strong> it</li>
+
+								<li>
+									When a state is selected:
+									<ul>
+									<li><strong>Delete</strong> removes the state</li>
+									<li><strong>S</strong> select as source state for current player</li>
+									<li><strong>T</strong> select as target state for current player</li>
+									<li><strong>P</strong> select as next state for strategy of current player</li>
+									</ul>
+								</li>
+								<li>
+									When a transition is selected:
+									<ul>
+									<li><strong>L</strong>(eft), <strong>R</strong>(ight), <strong>B</strong>(oth) change direction</li>
+									<li><strong>Delete</strong> removes the transition</li>
+									<li><strong>Ctrl</strong> edit transition cost</li>
+									</ul>
+								</li>
+								</ul>
+							</div>
+					        
+					        <!-- Modal footer -->
+					        <div class="modal-footer">
+					          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					        </div>
+				        
+				      </div>
+				    </div>
+				  </div>
+				  
+				</div>
 		<h1>Network Congestion Simulation</h1>
+		<button type="button" class="btn btn-primary" id="instructions" data-toggle="modal" data-target="#myModal">
+	    	Instructions
+	  	</button>		
+
+
 		<section id="app">
 		<div id=app-body>
 			<div id=left-panel> 
@@ -44,33 +106,10 @@
 
 				</div>
 
-				<div class="instructions"> 
-					<ul class="unstyled">
-					<li>Click in the open space to <strong>add a state</strong></li>
-					<li>Drag between states to <strong>add a transition</strong></li>
-					<li>Ctrl-drag a state to <strong>move</strong> graph layout</li>
-					<li>Click a state or a transition to <strong>select</strong> it</li>
 
-					<li>
-						When a state is selected:
-						<ul>
-						<li><strong>Delete</strong> removes the state</li>
-						<li><strong>S</strong> select as source state for current player</li>
-						<li><strong>T</strong> select as target state for current player</li>
-						<li><strong>P</strong> select as next state for strategy of current player</li>
-						</ul>
-					</li>
-					<li>
-						When a transition is selected:
-						<ul>
-						<li><strong>L</strong>(eft), <strong>R</strong>(ight), <strong>B</strong>(oth) change direction</li>
-						<li><strong>Delete</strong> removes the transition</li>
-						<li><strong>Ctrl</strong> edit transition cost</li>
-						</ul>
-					</li>
-					</ul>
-				</div>
-		</div>
+
+
+				
 		<div id=graph> </div>	
 		</div>
 	</section>
@@ -119,6 +158,8 @@
 	  Network Congestion Simulation is a creation of <a href="https://github.com/Iddoyadlin">Iddo Yadlin</a> and <a href="https://github.com/danielkorat">Daniel Korat</a>, released under the <a href="http://opensource.org/licenses/mit-license.php">MIT License</a>.
 	</footer>
   </div>
+
+
 </body>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>

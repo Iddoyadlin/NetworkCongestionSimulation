@@ -35,6 +35,7 @@ svg {
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
+  float: left
 }
 
 svg:not(.active):not(.ctrl) {
@@ -118,10 +119,21 @@ text.shadow {
 #graph {
     border: solid 1px #eee;
     border-bottom: solid 1px #ccc;
+    /*display: block*/
+    width: 640px;
+    height: 540px;
+    position: absolute;
+    left: 320px;
+}
+    /*position: absolute;*/
 }
 
 button:not(.active) {
   border: 1px solid #ccc;
+}
+
+.btn-group>.btn{
+  float: none
 }
 
 .btn-secondary.active {
@@ -138,12 +150,8 @@ button:not(.active) {
 }
 
 
-.instructions{
-position: absolute;
-bottom: 0;
-padding-top: 10px;
-margin-top: 10px;
-border-top: 1px solid #e3e3e3;
+.container{
+float: right;
 }
 
 
@@ -188,4 +196,37 @@ input[type=text]:disabled {
 input{
   float:left;
   margin-right:5px;
+}
+
+img.github-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#instructions {
+   -webkit-tap-highlight-color: rgba(0,0,0,0);
+    box-sizing: border-box;
+    font: inherit;
+    margin: 0;
+    overflow: visible;
+    text-transform: none;
+    font-family: inherit;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    user-select: none;
+    color: #fff;
+    background-color: #337ab7;
+    border: 1px solid #ccc;
 }

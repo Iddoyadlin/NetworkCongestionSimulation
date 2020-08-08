@@ -1,11 +1,15 @@
 // set up SVG for D3
 
+
+
 var w=window,
 d=document,
 e=d.documentElement,
 g=d.getElementsByTagName('body')[0],
 x=w.innerWidth||e.clientWidth||g.clientWidth,
 y=w.innerHeight||e.clientHeight||g.clientHeight;
+
+$('.modal').modal('show')
 
 const width = x;
 const height = y;
@@ -727,7 +731,9 @@ async function start_simulation(){
       if (currentStrategy ==null || currentStrategy.length==0 ){ //no valid strategy for player
         continue
       }
-      await sleep(1500)
+      if (j!=selectedPlayer){
+        await sleep(2000)  
+      }
       selectPlayer(j)
       await sleep(2000)
       strategies[j] = currentStrategy

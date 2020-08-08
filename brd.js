@@ -206,7 +206,6 @@ function PickStrategy(G, strategies, players, player){
 function isNashEquilibrium(G, strategies, players){
   var newStrategies  = CopyStrategies(strategies)
   for (var player = 0; player < players.length; player++){
-    //validStrategy = isValidStrategyPath(strategies[player], players, player)
     betterStrategy = getBetterStrategyIfExists(G, newStrategies, players, player) 
     if (betterStrategy!=null){
       return false

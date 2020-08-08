@@ -176,6 +176,7 @@ function restart() {
   set_social_cost()
   set_potential()
   set_is_NE()
+  set_num_valid_players()
 
   path = path.data(links);
 
@@ -620,26 +621,35 @@ function makeAssignmentString(node) {
   return s
 }
 
+function format_num(num){
+  num_str = num.toString()
+  if (num_str.includes('.')){
+    spl = num_str.split('.')
+    num_str = spl[0] +'.' + spl[1].substring(0,4)
+  }
+  return num_str
+}
+
 
 function set_social_cost(){
   social_cost_em = document.getElementById('social_cost')
-  social_cost_em.text = total_social_cost(links,strategies)
+  social_cost_em.text = format_num(total_social_cost(links,strategies))
 }
 
 function set_player_cost(){
   player_cost_em = document.getElementById('player_cost')
-  player_cost_em.text = player_cost(selectedPlayer, strategies, links)
+  player_cost_em.text = format_num(player_cost(selectedPlayer, strategies, links))
 }
 
 function set_potential(){
   potential_em = document.getElementById('potential')
-  potential_em.text = potential(links, strategies)
+  potential_em.text = format_num(potential(links, strategies))
 }
 
 function set_is_NE(){
   ne_em = document.getElementById('NE')
   graph = {nodes:nodes, links:links}
-  ne_em.text = isNashEquilibrium(graph, strategies, players)
+  ne_em.text = isNashEquilibrium(graph, strategies, players).toString()
 }
 
 function set_best_response(){
@@ -650,6 +660,26 @@ function set_best_response(){
     restart()  
   }
   }
+
+function set_num_valid_players(){
+  num_players = 0
+  for (var i = 0; i < players.length; i++){
+    player = players[i]
+    if (player.source==null || player.target==null){
+      continue
+    }
+    playerStrategy = strategies[i]
+    if (playerStrategy.length ==0){
+      continue
+    }
+
+    if (playerStrategy[0]==player.source && playerStrategy[playerStrategy.length-1]==player.target){
+      num_players+=1
+  }
+  players_em = document.getElementById('active_strategies')
+  players_em.text = num_players.toString()
+  }
+}
 
 
 // app starts here

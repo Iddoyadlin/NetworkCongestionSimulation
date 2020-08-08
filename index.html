@@ -41,15 +41,15 @@
 									When a state is selected:
 									<ul>
 									<li><strong>Delete</strong> removes the state</li>
-									<li><strong>S</strong> select as source state for current player</li>
-									<li><strong>T</strong> select as target state for current player</li>
-									<li><strong>P</strong> select as next state for strategy of current player</li>
+									<li><strong>S</strong> select as source state for current player. will be shown as S&ltplayer&gt next to state </li>
+									<li><strong>T</strong> select as target state for current player. will be shown as T&ltplayer&gt next to state</li>
+									<li><strong>P</strong> select as next state for strategy of current player. path will be colored with player color</li>
 									</ul>
 								</li>
 								<li>
 									When a transition is selected:
 									<ul>
-									<li><strong>L</strong>(eft), <strong>R</strong>(ight), <strong>B</strong>(oth) change direction</li>
+									<li><strong>L</strong>(eft), <strong>R</strong>(ight), <strong>B</strong>(oth) change transition direction</li>
 									<li><strong>Delete</strong> removes the transition</li>
 									<li><strong>Ctrl</strong> edit transition cost</li>
 									</ul>
@@ -98,10 +98,12 @@
 				</div>
 
 				<div class="status"> 
+
 					Configuration:
 					<li>player cost- <a id=player_cost> </a> </li>
 					<li>social cost- <a id=social_cost> </a> </li>
 					<li>potential- <a id=potential> </a> </li>
+					<li> NE- <a id=NE> </a> </li>
 					</li>
 
 				</div>

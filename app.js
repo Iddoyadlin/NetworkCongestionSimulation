@@ -164,24 +164,43 @@ function restart() {
   // path (link) group
   if (selectedPlayer!=null){
     set_player_cost()
+    strategyLinks= linksInStrategy(strategies[selectedPlayer], links)
+    var strategyLinksindexes = []
+    for (link of strategyLinks){
+      strategyLinksindexes.push(link.index)
+    }
+  }
+  else{
+    var strategyLinksindexes = []
   }
   set_social_cost()
   set_potential()
+  set_is_NE()
 
   path = path.data(links);
 
   // update existing links
   path.classed('selected', (d) => d === selectedLink)
     .style('marker-start', (d) => d.left ? 'url(#start-arrow)' : '')
-    .style('marker-end', (d) => d.right ? 'url(#end-arrow)' : '');
+    .style('marker-end', (d) => d.right ? 'url(#end-arrow)' : '')
+    .style("stroke", function(d,i) {
+        if (strategyLinksindexes.includes(i)){
+          return colors(selectedPlayer+1)
+        } return "#000"
+      }
+      )
+
 
   // remove old links
   path.exit().remove();
 
   // add new links
+  
+
   path = path.enter().append('svg:path')
     .attr('class', 'link')
     .attr("id",function(d,i) { return "linkId_" + i; })
+    
     .classed('selected', (d) => d === selectedLink)
     .style('marker-start', (d) => d.left ? 'url(#start-arrow)' : '')
     .style('marker-end', (d) => d.right ? 'url(#end-arrow)' : '')
@@ -617,6 +636,11 @@ function set_potential(){
   potential_em.text = potential(links, strategies)
 }
 
+function set_is_NE(){
+  ne_em = document.getElementById('NE')
+  graph = {nodes:nodes, links:links}
+  ne_em.text = isNashEquilibrium(graph, strategies, players)
+}
 
 function set_best_response(){
   graph = {nodes:nodes, links:links}

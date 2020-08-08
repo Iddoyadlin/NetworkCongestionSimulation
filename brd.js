@@ -215,17 +215,21 @@ function isNashEquilibrium(G, strategies, players){
   return true
 }
 
+
+
+
 function BestResponseDynamics(G, strategies, players){
   var strategies  = CopyStrategies(strategies)
   for (var player = 0; player < players.length; player++){
     PickStrategy(G, strategies, players, player)
   }
 
-  all_strategies = [];
+  var all_strategies = [];
   do {
+    console.log('here')
     all_strategies.push(CopyStrategies(strategies))
     NE = true
-    for (var player = 0; player < players.length; i++){
+    for (var player = 0; player < players.length; player++){
       invalid_strategy = strategies[player] ==null
       if (invalid_strategy){
         continue

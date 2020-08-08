@@ -49,8 +49,10 @@ players = [
 {"source":null, "target": null}
 ]
 
-strategies = [ [0],[0],[],[],[] ] //list of nodes for each player. first node should be source of player, last should be target of player
 
+
+
+strategies = [ [0],[0],[],[],[] ] //list of nodes for each player. first node should be source of player, last should be target of player
 // init D3 force layout
 const force = d3.forceSimulation()
   .force('link', d3.forceLink().id((d) => d.id).distance(150))
@@ -157,14 +159,39 @@ function tick() {
 }
 
 
+function updateLinksColors(player, strategies){
+  if (player!=null){
+    //set_player_cost()
+    var strategyLinks= linksInStrategy(strategies[player], links)
+    var strategyLinksindexes = []
+    for (link of strategyLinks){
+      strategyLinksindexes.push(link.index)
+    }
+  }
+  else{
+    var strategyLinksindexes = []
+  }
+  var t = d3.transition()
+    .duration(750)
+    .ease(d3.easeLinear);
 
+  path.transition(t).style("stroke", function(d,i) {
+        if (strategyLinksindexes.includes(i)){
+          return colors(player+1)
+        } return "#000"
+      }
+      )
+}
 
-// update graph (called when needed)
-function restart() {
-  // path (link) group
-  if (selectedPlayer!=null){
-    set_player_cost()
-    strategyLinks= linksInStrategy(strategies[selectedPlayer], links)
+function updateNodeColors(selectNode, player, strategies){
+  circle.selectAll('circle')
+    .style('fill', (d) => (d === selectNode) ? d3.rgb(getNodeColor(d, player, strategies)).brighter().toString() : getNodeColor(d, player, strategies))
+}
+
+function updateStatus(player, strategies){
+  if (player!=null){
+    set_player_cost(player)
+    strategyLinks= linksInStrategy(strategies[player], links)
     var strategyLinksindexes = []
     for (link of strategyLinks){
       strategyLinksindexes.push(link.index)
@@ -177,19 +204,20 @@ function restart() {
   set_potential()
   set_is_NE()
   set_num_valid_players()
+}
+
+
+// update graph (called when needed)
+function restart() {
+  updateStatus(selectedPlayer, strategies)
+  // path (link) group
 
   path = path.data(links);
-
   // update existing links
   path.classed('selected', (d) => d === selectedLink)
     .style('marker-start', (d) => d.left ? 'url(#start-arrow)' : '')
     .style('marker-end', (d) => d.right ? 'url(#end-arrow)' : '')
-    .style("stroke", function(d,i) {
-        if (strategyLinksindexes.includes(i)){
-          return colors(selectedPlayer+1)
-        } return "#000"
-      }
-      )
+  updateLinksColors(selectedPlayer, strategies)
 
 
   // remove old links
@@ -238,8 +266,9 @@ function restart() {
   circle = circle.data(nodes, (d) => d.id);
 
   // update existing nodes (selected visual states)
+  updateNodeColors(selectedNode, selectedPlayer, strategies)
   circle.selectAll('circle')
-    .style('fill', (d) => (d === selectedNode) ? d3.rgb(getNodeColor(d)).brighter().toString() : getNodeColor(d))
+    .style('fill', (d) => (d === selectedNode) ? d3.rgb(getNodeColor(d, selectedPlayer, strategies)).brighter().toString() : getNodeColor(d, selectedPlayer, strategies))
 
   // remove old nodes
   circle.exit().remove();
@@ -250,8 +279,8 @@ function restart() {
   g.append('svg:circle')
     .attr('class', 'node')
     .attr('r', 12)
-    .style('fill', (d) => (d === selectedNode) ? d3.rgb(getNodeColor(d)).brighter().toString() : getNodeColor(d))
-    .style('stroke', (d) => d3.rgb(getNodeColor(d)).darker().toString())
+    .style('fill', (d) => (d === selectedNode) ? d3.rgb(getNodeColor(d, selectedPlayer, strategies)).brighter().toString() : getNodeColor(d, selectedPlayer, strategies))
+    .style('stroke', (d) => d3.rgb(getNodeColor(d, selectedPlayer, strategies)).darker().toString())
     .on('mouseover', function (d) {
       if (!mousedownNode || d === mousedownNode) return;
       // enlarge target node
@@ -584,15 +613,15 @@ function submit(){
   restart();
 }
 
-function getNodeColor(node){
-  if (selectedPlayer==null){
+function getNodeColor(node, player, strategies){
+  if (player==null){
     return colors(0)
   }
-  in_strategy = strategies[selectedPlayer].includes(node.id)
+  in_strategy = strategies[player].includes(node.id)
   if (!in_strategy){
     return colors(0)  
   }
-  return colors(selectedPlayer+1)
+  return colors(player+1)
 
 }
 
@@ -636,9 +665,9 @@ function set_social_cost(){
   social_cost_em.text = format_num(total_social_cost(links,strategies))
 }
 
-function set_player_cost(){
+function set_player_cost(player){
   player_cost_em = document.getElementById('player_cost')
-  player_cost_em.text = format_num(player_cost(selectedPlayer, strategies, links))
+  player_cost_em.text = format_num(player_cost(player, strategies, links))
 }
 
 function set_potential(){
@@ -649,7 +678,11 @@ function set_potential(){
 function set_is_NE(){
   ne_em = document.getElementById('NE')
   graph = {nodes:nodes, links:links}
-  ne_em.text = isNashEquilibrium(graph, strategies, players).toString()
+  is_ne = isNashEquilibrium(graph, strategies, players)
+  ne_em.text = is_ne.toString()
+  isNashEquilibrium(graph, strategies, players).toString()
+
+  document.getElementsByClassName("runBRD")[0].disabled = is_ne;
 }
 
 function set_best_response(){
@@ -680,6 +713,33 @@ function set_num_valid_players(){
   players_em.text = num_players.toString()
   }
 }
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function start_simulation(){
+  graph = {nodes:nodes, links:links}
+  all_strategies = BestResponseDynamics(graph, strategies, players)
+  for (var i = 0; i < all_strategies.length; i++){
+    for (var j = 0; j < all_strategies[i].length; j++){
+      currentStrategy= all_strategies[i][j]
+      if (currentStrategy ==null || currentStrategy.length==0 ){ //no valid strategy for player
+        continue
+      }
+      await sleep(1500)
+      selectPlayer(j)
+      await sleep(2000)
+      strategies[j] = currentStrategy
+      updateNodeColors(null, j, all_strategies[i])
+      updateLinksColors(j, all_strategies[i])
+      updateStatus(j, all_strategies[i])
+      
+  }    
+  }
+}
+
+  
 
 
 // app starts here

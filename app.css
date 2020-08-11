@@ -230,3 +230,12 @@ img.github-link {
     background-color: #337ab7;
     border: 1px solid #ccc;
 }
+
+table, th, td{
+  border: 1px solid black;  
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 2px;
+}

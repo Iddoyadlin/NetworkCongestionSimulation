@@ -165,7 +165,6 @@ function tick() {
 
 function updateLinksColors(player, strategies){
   if (player!=null){
-    //set_player_cost()
     var strategyLinks= linksInStrategy(strategies[player], links)
     var strategyLinksindexes = []
     for (link of strategyLinks){
@@ -194,7 +193,6 @@ function updateNodeColors(selectNode, player, strategies){
 
 function updateStatus(player, strategies){
   if (player!=null){
-    set_player_cost(player)
     strategyLinks= linksInStrategy(strategies[player], links)
     var strategyLinksindexes = []
     for (link of strategyLinks){
@@ -207,7 +205,7 @@ function updateStatus(player, strategies){
   set_social_cost()
   set_potential()
   set_is_NE()
-  set_num_valid_players()
+  set_table()
 }
 
 
@@ -669,11 +667,6 @@ function set_social_cost(){
   social_cost_em.text = format_num(total_social_cost(links,strategies))
 }
 
-function set_player_cost(player){
-  player_cost_em = document.getElementById('player_cost')
-  player_cost_em.text = format_num(player_cost(player, strategies, links))
-}
-
 function set_potential(){
   potential_em = document.getElementById('potential')
   potential_em.text = format_num(potential(links, strategies))
@@ -696,27 +689,27 @@ function set_best_response(){
     strategies[selectedPlayer] = strategy.path
     restart()  
   }
-  }
-
-function set_num_valid_players(){
-  num_players = 0
-  for (var i = 0; i < players.length; i++){
-    player = players[i]
-    if (player.source==null || player.target==null){
-      continue
-    }
-    playerStrategy = strategies[i]
-    if (playerStrategy.length ==0){
-      continue
-    }
-
-    if (playerStrategy[0]==player.source && playerStrategy[playerStrategy.length-1]==player.target){
-      num_players+=1
-  }
-  players_em = document.getElementById('active_strategies')
-  players_em.text = num_players.toString()
-  }
 }
+
+function set_table(){
+  player_cost_ems = document.getElementsByClassName("player_cost")
+  player_strategy_ems = document.getElementsByClassName("player_strategy")
+  player_num_ems = document.getElementsByClassName("player_num")
+  for (var i = 0; i < player_cost_ems.length; i++){
+      player_cost_ems[i].innerHTML = format_num(player_cost(i, strategies, links))
+      text = strategies[i].slice(0,5).join('-') || 'NA'
+      if (strategies[i].length>5){
+        text= text + "..."
+        player_strategy_ems[i].setAttribute('title', strategies[i].join(','))
+      }
+      player_strategy_ems[i].innerHTML = text
+
+      if (players[i].source!=null && players[i].target==null ){
+        player_num_ems[i].innerHTML = i.toString()+"*"
+      }
+    }
+}
+
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));

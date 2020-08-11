@@ -274,7 +274,7 @@ function Dijkstra(source_id, target_id, graph, strategies){
     neighbors = getNeighbors(graph.links,u, Q)
 
     for (v of neighbors){
-      var link = getLink(graph.links, u,v);
+      var link = getLink(graph.links, graph.nodes[u].id,graph.nodes[v].id);
       alt = dist[u] + edgePlayerSwitchCost(u,v,link.cost, strategies);
       // console.log('link is (' +u.toString(), ',' +v.toString()+')'+ ' alt is ' + alt.toString());
       if (alt < dist[v]){

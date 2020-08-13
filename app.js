@@ -11,9 +11,9 @@ y=w.innerHeight||e.clientHeight||g.clientHeight;
 
 $('.modal').modal('show')
 
-const width = x;
+const width = Math.round(x*0.7);
 const height = y;
-const colors = d3.scaleOrdinal(d3.schemeCategory10);
+const colors = ["#D3D3D3", "#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#d48be8"];
 
 
 // set default active player
@@ -176,7 +176,7 @@ function updateLinksColors(player, strategies){
 
   path.transition(t).style("stroke", function(d,i) {
         if (strategyLinksindexes.includes(i)){
-          return colors(player+1)
+          return colors[player+1]
         } return "#000"
       }
       )
@@ -534,13 +534,11 @@ function keydown() {
     }
     case 83: // S
       if (selectedNode!=null && selectedPlayer != null){
-        if (players[selectedPlayer]['source'] != selectedNode.id){
-          strategies[selectedPlayer].length = 0 //empty array
-          strategies[selectedPlayer].push(selectedNode.id)
-          players[selectedPlayer]['source'] = selectedNode.id
-          circle.selectAll('text:not(.id)').text(makeAssignmentString);
-          clearSelection()
-        }
+        strategies[selectedPlayer].length = 0 //empty array
+        strategies[selectedPlayer].push(selectedNode.id)
+        players[selectedPlayer]['source'] = selectedNode.id
+        circle.selectAll('text:not(.id)').text(makeAssignmentString);
+        clearSelection()
       }
       
       restart();
@@ -573,7 +571,7 @@ function selectPlayer(player){
   buttons = document.getElementsByClassName('btn-secondary')
   for (var i = 0; i < buttons.length; i++){
     buttons[i].classList.remove("active")
-    buttons[i].style.backgroundColor = colors(i+1)
+    buttons[i].style.backgroundColor = colors[i+1]
   }
   buttons[player].classList.add("active")
 
@@ -613,13 +611,13 @@ function submit(){
 
 function getNodeColor(node, player, strategies){
   if (player==null){
-    return colors(0)
+    return colors[0]
   }
   in_strategy = strategies[player].includes(node.id)
   if (!in_strategy){
-    return colors(0)  
+    return colors[0]
   }
-  return colors(player+1)
+  return colors[player+1]
 
 }
 
@@ -671,10 +669,9 @@ function set_potential(){
 function set_is_NE(){
   ne_em = document.getElementById('NE')
   graph = {nodes:nodes, links:links}
-  is_ne = isNashEquilibrium(graph, strategies, players)
+  is_nes = isNashEquilibrium(graph, strategies, players)
+  is_ne = is_nes.every(function (e){ return e})
   ne_em.text = is_ne.toString()
-  isNashEquilibrium(graph, strategies, players).toString()
-
   document.getElementsByClassName("runBRD")[0].disabled = is_ne;
 }
 
@@ -691,7 +688,11 @@ function set_table(){
   player_cost_ems = document.getElementsByClassName("player_cost")
   player_strategy_ems = document.getElementsByClassName("player_strategy")
   player_num_ems = document.getElementsByClassName("player_num")
+  is_optimal_ems = document.getElementsByClassName("is_optimal")
+
+  is_optimal = isNashEquilibrium(graph, strategies, players)
   for (var i = 0; i < player_cost_ems.length; i++){
+      is_optimal_ems[i].innerHTML = is_optimal[i].toString()
       player_cost_ems[i].innerHTML = format_num(player_cost(i, strategies, links))
       text = strategies[i].slice(0,5).join('-') || 'NA'
       if (strategies[i].length>5){
@@ -721,10 +722,10 @@ async function start_simulation(){
         continue
       }
       if (j!=selectedPlayer){
-        await sleep(2000)  
+        await sleep(1500)
       }
       selectPlayer(j)
-      await sleep(2000)
+      await sleep(1500)
       strategies[j] = currentStrategy
       updateNodeColors(null, j, all_strategies[i])
       updateLinksColors(j, all_strategies[i])

@@ -179,6 +179,9 @@ function getBetterStrategyIfExists(graph, strategies, players, player){
     return null
   }
   var strategy = findBetterStrategy(strategies, players, graph, player)
+  if (strategy==null){
+    return null
+  }
   if (!isValidStrategyPath(strategy.path, players, player)){
     return null
   }
@@ -192,51 +195,53 @@ function getBetterStrategyIfExists(graph, strategies, players, player){
 
 
 function PickStrategy(G, strategies, players, player){
-  if (!isValidStrategyPath(strategies[player], players, player))
-      strategy = getBetterStrategyIfExists(G, strategies, players, player)
-      if (strategy==null){
-        console.log('no valid strategy for player ' + player.toString())
-      }else{
-        strategies[player] = strategy.path
-      }
-      
+  if (isValidStrategyPath(strategies[player], players, player)){
+    return strategies[player]
+  }
+
+  strategy = getBetterStrategyIfExists(G, strategies, players, player)
+  if (strategy==null){
+    console.log('no valid strategy for player ' + player.toString())
+    return null
+  }else{
+    return strategy.path
+  }
+  return null
       
 }
 
 function isNashEquilibrium(G, strategies, players){
+  var NEs = []
+
   var newStrategies  = CopyStrategies(strategies)
   for (var player = 0; player < players.length; player++){
     betterStrategy = getBetterStrategyIfExists(G, newStrategies, players, player) 
-    if (betterStrategy!=null){
-      return false
-    }
-
+    NEs.push(betterStrategy==null)
   }
-  return true
+  return NEs
 }
 
 
-
-
 function BestResponseDynamics(G, strategies, players){
-  var strategies  = CopyStrategies(strategies)
+  var old_strategies  = CopyStrategies(strategies)
+  var new_strategies  = CopyStrategies(strategies)
   for (var player = 0; player < players.length; player++){
-    PickStrategy(G, strategies, players, player)
+    new_strategies[player]= PickStrategy(G, old_strategies, players, player)
   }
 
   var all_strategies = [];
   do {
     console.log('here')
-    all_strategies.push(CopyStrategies(strategies))
+    all_strategies.push(CopyStrategies(new_strategies))
     NE = true
     for (var player = 0; player < players.length; player++){
-      invalid_strategy = strategies[player] ==null
+      invalid_strategy = new_strategies[player] ==null
       if (invalid_strategy){
         continue
       }
-      new_strategy = getBetterStrategyIfExists(G, strategies, players, player)
+      new_strategy = getBetterStrategyIfExists(G, new_strategies, players, player)
       if (new_strategy!=null){
-        strategies[player] = new_strategy.path
+        new_strategies[player] = new_strategy.path
         NE = false
       }
     }

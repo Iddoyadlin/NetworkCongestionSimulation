@@ -13,9 +13,15 @@
 
   <body>
     <div id="page-container">
-		<a href="https://github.com/Iddoyadlin/NetworkCongestionSimulation"><img class="github-link" src="img/blacktocat-32.png" title="Fork me on GitHub"></a>
-		
-		<div class="container">
+		<div id="title-div">
+			<h1>Network Congestion Simulation</h1>
+			<a href="https://github.com/Iddoyadlin/NetworkCongestionSimulation"><img src="img/blacktocat-32.png" title="Fork me on GitHub"></a>
+			<button type="button" class="btn btn-primary" id="instructions" data-toggle="modal" data-target="#myModal">
+		    	Instructions
+		  	</button>
+		</div>
+					
+					<div class="container">
 					  <!-- Button to Open the Modal -->
 					  
 
@@ -42,7 +48,7 @@
 									When a state is selected:
 									<ul>
 									<li><strong>Delete</strong> removes the state</li>
-									<li><strong>S</strong> select as source state for current player. will be shown as S&ltplayer&gt next to state </li>
+									<li><strong>S</strong> select as source state for current player. will be shown as S&ltplayer&gt next to state. <br> selecting a source state will restart selected player strategy</li>
 									<li><strong>T</strong> select as target state for current player. will be shown as T&ltplayer&gt next to state</li>
 									<li><strong>P</strong> select as next state for strategy of current player. path will be colored with player color</li>
 									</ul>
@@ -68,91 +74,94 @@
 				  </div>
 				  
 				</div>
-		<h1>Network Congestion Simulation</h1>
-		<button type="button" class="btn btn-primary" id="instructions" data-toggle="modal" data-target="#myModal">
-	    	Instructions
-	  	</button>		
+				
+				
 
 
 		<section id="app">
 		<div id=app-body>
-			<div id=left-panel> 
-				<div>
-					Select player settings:
-				</div>
+			
+			<div id=left-panel>
+				<h3>Players</h3>
 				<div class="btn-group">
 					<button class='btn btn-secondary' onclick="selectPlayer(0)">0 </button>
 					<button class='btn btn-secondary' onclick="selectPlayer(1)">1 </button>
 					<button class='btn btn-secondary' onclick="selectPlayer(2)">2 </button>
 					<button class='btn btn-secondary' onclick="selectPlayer(3)">3 </button>
 					<button class='btn btn-secondary' onclick="selectPlayer(4)">4 </button>
-
-				</div>
-				<div>
-					<button class="submit" onclick="set_best_response()">Best response </button>
 				</div>
 
 				<div>
-				<br>
-					Edge cost : <br><input type="text" id="cost" disabled="true">
+					<button id="best-response-button" class="submit" onclick="set_best_response()">Best response </button>
+				</div>
+
+				<div>
+					<h3>Edge Cost</h3>
+					<input type="text" id="cost" disabled="true">
 					<button class="submit" onclick="submit()">Submit </button>
 				</div>
 
 				<div class="status"> 
-					Best Response Dynamics:
+					<h3 id="inline-h3">Best Response Dynamics </h3>
 					<button class=runBRD onclick="start_simulation()"> <i class="fa fa-play" aria-hidden="true"></i> </button>
-					<li>social cost- <a id=social_cost> </a> </li>
-					<li>potential- <a id=potential> </a> </li>
-					<li> NE- <a id=NE> </a> </li>
-					</li>
-
-				<table>
-				  <tr>
-				    <th>Player</th>
-				    <th>Cost</th> 
-				    <th style="width: 50%" >Strategy</th>
-				  </tr>
-				  <tr>
-				    <td class=player_num>0</td>
-				    <td class=player_cost></td>
-				    <td class=player_strategy></td>
-				  </tr>
-				  <tr>
-				    <td class=player_num>1</td>
-				    <td class=player_cost ></td>
-				    <td class=player_strategy></td>
-				  </tr>
-				  <tr>
-				    <td class=player_num>2</td>
-				    <td class=player_cost></td>
-				    <td class=player_strategy></td>
-				  </tr>
-
-				  <tr>
-				    <td class=player_num>3</td>
-				    <td class=player_cost ></td>
-				    <td class=player_strategy></td>
-				  </tr>
-
-				  <tr>
-				    <td class=player_num>4</td>
-				    <td class=player_cost ></td>
-				    <td class=player_strategy></td>
-				  </tr>
-
-				</table>
-
-				<p> *players without target or valid strategies are ignored.<p>
-
+					<li>Social cost - <a id=social_cost> </a> </li>
+					<li>Potential - <a id=potential> </a> </li>
+					<li> NE - <a id=NE> </a> </li>
 				</div>
 
+				<div>	
+					<table>
+					  <tr>
+					    <th>Player</th>
+					    <th>Cost</th> 
+					    <th style="width: 45%" >Strategy</th>
+					    <th>Optimal?</th>
+					  </tr>
+					  <tr>
+					    <td class=player_num>0</td>
+					    <td class=player_cost></td>
+					    <td class=player_strategy></td>
+					    <td class=is_optimal></td>
+					  </tr>
+					  <tr>
+					    <td class=player_num>1</td>
+					    <td class=player_cost ></td>
+					    <td class=player_strategy></td>
+					    <td class=is_optimal></td>
+					  </tr>
+					  <tr>
+					    <td class=player_num>2</td>
+					    <td class=player_cost></td>
+					    <td class=player_strategy></td>
+					    <td class=is_optimal></td>
+					  </tr>
 
+					  <tr>
+					    <td class=player_num>3</td>
+					    <td class=player_cost ></td>
+					    <td class=player_strategy></td>
+					    <td class=is_optimal></td>
+					  </tr>
 
+					  <tr>
+					    <td class=player_num>4</td>
+					    <td class=player_cost ></td>
+					    <td class=player_strategy></td>
+					    <td class=is_optimal></td>
+					  </tr>
+					</table>
+				</div> <!-- table -->
 
+				<p id="remark">*Players without target or valid strategies are ignored.</p>
+
+			</div>
+			<div id=graph> </div>	
 		</div>		
-	<div id=graph> </div>	
+	
 	</div>
 	</section>
+
+	<!--
 	<section id="whatis">
 	  <h2>What is a Network Congestion Game?</h2>
 	  <p>
@@ -194,6 +203,8 @@
 		</li>
 	  </ul>
 	</section>
+	-->
+
 	<footer>
 	  Network Congestion Simulation is a creation of <a href="https://github.com/Iddoyadlin">Iddo Yadlin</a> and <a href="https://github.com/danielkorat">Daniel Korat</a>, released under the <a href="http://opensource.org/licenses/mit-license.php">MIT License</a>.
 	</footer>

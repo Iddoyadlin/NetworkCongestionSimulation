@@ -32,31 +32,27 @@ const nodes = [
   { id: 0},
   { id: 1},
   { id: 2},
-  { id: 3},
-  //{ id: 1},
+  { id: 3}
 ];
 let lastNodeId = nodes.length-1;
 // let lastNodeId = 2;
 const links = [
-   { source: nodes[0], target: nodes[1], left: false, right: true, cost:'x' },
-   { source: nodes[0], target: nodes[2], left: false, right: true, cost:'0.5' },
-   { source: nodes[1], target: nodes[2], left: true, right: true, cost: 0},
-   { source: nodes[1], target: nodes[3], left: false, right: true, cost: '0.5'},
-   { source: nodes[2], target: nodes[3], left: false, right: true, cost:'x' }
+   { source: nodes[0], target: nodes[1], left: false, right: true, cost:'1.01' },
+   { source: nodes[0], target: nodes[2], left: false, right: true, cost:'x'},
+   { source: nodes[2], target: nodes[3], left: false, right: true, cost:'x'},
+   { source: nodes[1], target: nodes[3], left: false, right: true, cost:'1.01' }
 ];
 
 players = [
 {"source":0, "target": 3},
 {"source":0, "target": 3},
-{"source":null, "target": null}, 
-{"source":null, "target": null}, 
-{"source":null, "target": null}
+{"source":0, "target": 3}, 
+{"source":0, "target": 3}, 
+{"source":0, "target": 3}
 ]
 
 
-
-
-strategies = [ [0],[0],[],[],[] ] //list of nodes for each player. first node should be source of player, last should be target of player
+strategies = [ [0],[0],[0],[0],[0] ] //list of nodes for each player. first node should be source of player, last should be target of player
 // init D3 force layout
 const force = d3.forceSimulation()
   .force('link', d3.forceLink().id((d) => d.id).distance(150))

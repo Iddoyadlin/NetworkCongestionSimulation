@@ -37,10 +37,10 @@ const nodes = [
 let lastNodeId = nodes.length-1;
 // let lastNodeId = 2;
 const links = [
-   { source: nodes[0], target: nodes[1], left: false, right: true, cost:'1.01' },
+   { source: nodes[0], target: nodes[1], left: false, right: true, cost:'4.1' },
    { source: nodes[0], target: nodes[2], left: false, right: true, cost:'x'},
-   { source: nodes[2], target: nodes[3], left: false, right: true, cost:'x'},
-   { source: nodes[1], target: nodes[3], left: false, right: true, cost:'1.01' }
+   { source: nodes[2], target: nodes[3], left: false, right: true, cost:'4.1'},
+   { source: nodes[1], target: nodes[3], left: false, right: true, cost:'x' }
 ];
 
 players = [
@@ -48,11 +48,11 @@ players = [
 {"source":0, "target": 3},
 {"source":0, "target": 3}, 
 {"source":0, "target": 3}, 
-{"source":0, "target": 3}
+{"source":null, "target": null}, 
 ]
 
 
-strategies = [ [0],[0],[0],[0],[0] ] //list of nodes for each player. first node should be source of player, last should be target of player
+strategies = [ [0],[0],[0],[0],[] ] //list of nodes for each player. first node should be source of player, last should be target of player
 // init D3 force layout
 const force = d3.forceSimulation()
   .force('link', d3.forceLink().id((d) => d.id).distance(150))
@@ -718,9 +718,18 @@ async function start_simulation(){
   for (var i = 0; i < all_strategies.length; i++){
     for (var j = 0; j < all_strategies[i].length; j++){
       currentStrategy= all_strategies[i][j]
+
+
       if (currentStrategy ==null || currentStrategy.length==0 ){ //no valid strategy for player
         continue
       }
+      if (currentStrategy.toString() == strategies[j].toString() ){ //no change in strategy
+        continue
+      }
+
+      console.log('next strategy for player ' + j.toString() +'is '+ currentStrategy.toString())
+      console.log('current strategy for player ' + j.toString()+ 'is '+ strategies[j].toString())
+
       if (j!=selectedPlayer){
         await sleep(1500)
       }

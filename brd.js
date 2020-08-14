@@ -15,7 +15,7 @@ function EdgeSocialCost(u,v,cost, strategies, extra_players=0) {
   if (num_users === 0){
     return null;
   }
-  return Polynomial(cost).eval(num_users)
+  return Polynomial(cost).eval(num_users) * num_users
 }
 
 function edgePlayerSwitchCost(u,v,cost, strategies){
@@ -126,7 +126,11 @@ function getNeighbors(links, u, Q){
 function CopyStrategies(strategies){
     copy = new Array(strategies.length);
     for (var i=0; i<strategies.length; ++i){
-      copy[i] = strategies[i].slice(0);
+      if (strategies[i]==null){
+        copy[i]=null  
+      }else{
+        copy[i] = strategies[i].slice(0);  
+      }
     }
     return copy
 }
@@ -202,11 +206,11 @@ function PickStrategy(G, strategies, players, player){
   strategy = getBetterStrategyIfExists(G, strategies, players, player)
   if (strategy==null){
     console.log('no valid strategy for player ' + player.toString())
-    return null
+    return []
   }else{
     return strategy.path
   }
-  return null
+  return []
       
 }
 
@@ -223,10 +227,9 @@ function isNashEquilibrium(G, strategies, players){
 
 
 function BestResponseDynamics(G, strategies, players){
-  var old_strategies  = CopyStrategies(strategies)
   var new_strategies  = CopyStrategies(strategies)
   for (var player = 0; player < players.length; player++){
-    new_strategies[player]= PickStrategy(G, old_strategies, players, player)
+    new_strategies[player]= PickStrategy(G, CopyStrategies(new_strategies), players, player)
   }
 
   var all_strategies = [];
@@ -235,7 +238,7 @@ function BestResponseDynamics(G, strategies, players){
     all_strategies.push(CopyStrategies(new_strategies))
     NE = true
     for (var player = 0; player < players.length; player++){
-      invalid_strategy = new_strategies[player] ==null
+      invalid_strategy = new_strategies[player] ==null || new_strategies[player].length == 0
       if (invalid_strategy){
         continue
       }

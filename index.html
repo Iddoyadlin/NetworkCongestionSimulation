@@ -32,12 +32,13 @@
 					      
 					        <!-- Modal Header -->
 					        <div class="modal-header">
-					          <h1 class="modal-title">Configuring the network</h1>
+					          
 					          <button type="button" class="close" data-dismiss="modal">×</button>
 					        </div>
 					        
 					        <!-- Modal body -->
 					        <div class="modal-body">
+					        	<h1 class="modal-title">Configuring the network</h1>
 								<ul class="unstyled">
 								<li>Click in the open space to <strong>add a state</strong></li>
 								<li>Drag between states to <strong>add a transition</strong></li>
@@ -62,6 +63,47 @@
 									</ul>
 								</li>
 								</ul>
+
+								<h1>What is a Network Congestion Game?</h1>
+							  <p>
+								<strong>Network Congestion Games</strong> are a type of strategic games where each player chooses a subset from a set of resources,
+								and <strong>the cost of each resource dependes on the number of players who chose it</strong>. <br>
+								Each player's selection is called his <strong>strategy</strong>, and the set of all strategies for all players is called a <strong>profile</strong>. <br>
+							  </p>
+							  <p>
+								Congestion games belong to a special class of potential games considered in game theory.
+								Potential games always have a <strong>Nash Equilibrium (NE)</strong> - a profile for which no player has an incentive to switch his strategy.  <br>
+								Our simultation visualizes the <strong>Best Response Dynamics (BRD)</strong> algorithm, which finds the NE in any congestion game you define.
+							  </p>
+							  <h3>Example for a congestion game</h3>
+							  <img src="img/example.png" alt="Congestion Game Example" width="500" height="300">
+							  <p>
+								Consider the example above: players A,B and C have to go from point S to T using road segments SX, XY,...etc.  <br>
+								Numbers on edges denote the cost for a single user for using the corresponding road segment, where the actual  <br>
+								cost is a function of the actual number of players using that road segment(i.e. a descrete delay function).  <br>
+								For example: if segment SX is used by a 1,2, or 3 users, the cost on that segment would be 2,3, or 5, respectively.  <br>
+								The total cost of each player is the sum of all segments he uses. Note that the players are therefore engaged in a  <br>
+								game which can be represented in a strategic form(as a cost matrix).
+							  </p>
+							  <h2>References</h2>
+							  <p>
+								If you're curious to learn more, here are a few useful resources:
+							  </p>
+							  <ul class="unstyled">
+								<li>
+									<a href="https://www.tau.ac.il/~mansour/course_games/scribe/lecture6.pdf" target="_blank">Lecture on congestion and potential games @ Tel-Aviv University</a>
+									<p></p>
+								</li>
+								<li>
+								  <a href="https://en.wikipedia.org/wiki/Congestion_game" target="_blank">Congestion game @ Wikipedia</a>
+								  <p></p>
+								</li>
+								<li>
+								  <a href="https://www.cs.rpi.edu/~eanshel/papers/ConnectionGame.pdf" target="_blank">Near-optimal network design with selfish agents (Anshelevich et al., 2003)</a>
+								  <p></p>
+								</li>
+							  </ul>
+
 							</div>
 					        
 					        <!-- Modal footer -->
